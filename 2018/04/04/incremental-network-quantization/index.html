@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="network quantization," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="As most of the existing methods suffer from high decreasing on model performance and need many training epochs, the authors provided a lossless quantization method to overcome these problems. The pro">
+<meta name="keywords" content="network quantization">
+<meta property="og:type" content="article">
+<meta property="og:title" content="INQ (Incremental Network Quantization)">
+<meta property="og:url" content="http://iceory.com/2018/04/04/incremental-network-quantization/index.html">
+<meta property="og:site_name" content="iceory&#39;s blog">
+<meta property="og:description" content="As most of the existing methods suffer from high decreasing on model performance and need many training epochs, the authors provided a lossless quantization method to overcome these problems. The pro">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://iceory.com/2018/04/04/incremental-network-quantization/INQ%20overview.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/incremental-network-quantization/INQ%20strategy.png">
+<meta property="og:updated_time" content="2018-04-04T08:45:57.920Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="INQ (Incremental Network Quantization)">
+<meta name="twitter:description" content="As most of the existing methods suffer from high decreasing on model performance and need many training epochs, the authors provided a lossless quantization method to overcome these problems. The pro">
+<meta name="twitter:image" content="http://iceory.com/2018/04/04/incremental-network-quantization/INQ%20overview.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iceory.com/2018/04/04/incremental-network-quantization/"/>
+
+
+
+
+
+  <title>INQ (Incremental Network Quantization) | iceory's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iceory's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iceory.com/2018/04/04/incremental-network-quantization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="iceory">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iceory's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">INQ (Incremental Network Quantization)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T15:45:05+08:00">
+                2018-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network-quantization/" itemprop="url" rel="index">
+                    <span itemprop="name">network quantization</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/2018/04/04/incremental-network-quantization/INQ overview.png" alt="INQ overview"></p>
+<p>As most of the existing methods suffer from high decreasing on model performance and need many training epochs, the authors provided a lossless quantization method to overcome these problems. The proposed method mainly contains three steps: weight partition, group-wise quantization and re-training. Given a trained model, the first step of INQ is to divide weights of the model into to group, one for quantization and another for re-training. Second, apply weight quantization and convert 32-bits floating point data to low precision data. Third, freeze the quantized weights and retraining the network using SGD, then update remaining weights of the network. Repeating these three steps until all weights are quantized, then we can get a low precision model without significant accuracy loss. Considering binary shift operation is more efficient in hardware, the authors quantize weights of convolutional layers and fully connected layers to the  power of 2.<br><a id="more"></a></p>
+<h3 id="Weight-Quantization-Strategy"><a href="#Weight-Quantization-Strategy" class="headerlink" title="Weight Quantization Strategy"></a>Weight Quantization Strategy</h3><p>Suppose weights of a pre-trained full precision model can be represented by ${ W_l: 1 \le l \le L }$, the quantized weights are represented by $\widehat{W_l}$ , where each item is chosen from $P_l = {\pm2^{n_1}, \cdots, \pm2^{n_2}, 0}$. The quantization method is formulated by<br>$$<br>\widehat{W_l}(i, j) =<br>\begin{cases}<br>\beta sgn(W_l (i, j))&amp;if (\alpha + \beta)/2 \le abs(W_l (i, j)) \lt 3\beta/2 &amp;\\<br>0 &amp; otherwise,<br>\end{cases} \tag{1}<br>$$<br>where $\alpha$ and $\beta$ are two adjacent elements in the sorted $P_l$. Based on Equation (1), $n_1$ and $n_2$ in $P_l$ can be computed by</p>
+<p>$$<br>n_1 = floor(log_2(4s/3)),<br>$$<br>where $s=max(abs(W_l))$;</p>
+<p>$$<br>n_2 =  n_1+1-2^{(b-1)}/2,<br>$$<br>where $b$ is the quantized bit-width.</p>
+<h4 id="Proof-1-compute-factor-4-3-of-n-1"><a href="#Proof-1-compute-factor-4-3-of-n-1" class="headerlink" title="Proof 1: compute factor 4/3 of $n_1$"></a>Proof 1: compute factor 4/3 of $n_1$</h4><p>Considering the extremely condition in Equation (1), we have </p>
+<p>$$<br>(2^{n_1-1} + 2^{n_1})/2 \le max(abs(W_l)) \le3\cdot2^{n_1}/2<br>$$.</p>
+<p>Then, </p>
+<p>$$<br>2^{n_1-1}\le2max(abs(W_l))/3\lt2^{n_1},<br>$$</p>
+<p>$$<br>n_1-1\le log_2(2max(abs(W_l))/3)\lt n_1<br>$$</p>
+<p>$$<br>n_1\le log_2(4max(abs(W_l))/3)\lt n_1+1<br>$$</p>
+<p>Because</p>
+<p>$$<br>floor(x)\le x \le ceil(x),<br>$$</p>
+<p>then we let $n_1=floor(4max(abs(W_l))/3)$.</p>
+<p>For simplifying the equation, define $s=max(abs(W_l))$, then we have $n_1 = floor(log_2(4s/3))$.</p>
+<h4 id="Proof-2-compute-n-2"><a href="#Proof-2-compute-n-2" class="headerlink" title="Proof 2: compute $n_2$"></a>Proof 2: compute $n_2$</h4><p>As $b$ denotes the expected bit-width, one bit for zero and others for representing the powers of 2, which including $2^{b-1}$ different values. Here we have $(n_1-n_2+1)\cdot2= 2^{b-1}$ according to definition of $P_l$. Thus $n_2$ can be computed by $n_2 = n_1+1-2^{b-1}/2$.</p>
+<h3 id="Weight-Partition-Strategies"><a href="#Weight-Partition-Strategies" class="headerlink" title="Weight Partition Strategies"></a>Weight Partition Strategies</h3><p>In this paper, the authors explored two kinds of weight partition strategies, including random partition and pruning-inspired partition. The second partition strategy considers that weights with larger absolute values are more important than the smaller ones and would have more possibility to be quantized. The experimental results also shows that the pruning-inspired strategy outperforms the first one for about 0.8% with ResNet-18.</p>
+<h3 id="Implementation-in-PyTorch"><a href="#Implementation-in-PyTorch" class="headerlink" title="Implementation in PyTorch"></a>Implementation in PyTorch</h3><p><img src="/2018/04/04/incremental-network-quantization/INQ strategy.png" alt="INQ strategy"></p>
+<p><strong>Prepare:</strong> pre-train a full-precision model</p>
+<p><strong>Step1, weight partition: </strong></p>
+<ol>
+<li>decide number of weights to be quantized according to portion ${\sigma_1, \sigma_2, \cdots, \sigma_n}$ </li>
+<li>generate quantization mask $T_l(i, j)\in {0,1}$ using pruning-inspired strategy</li>
+</ol>
+<p><strong>Step2, group-wise quantization:</strong></p>
+<ol>
+<li>quantize weights according to mask $T_l$ </li>
+<li>in order to make sure the quantized weights not be changed during re-training phase, here we save weights as $\widehat{W}$</li>
+</ol>
+<p><strong>Step3, re-training: </strong></p>
+<ol>
+<li>reset learning rate</li>
+<li>apply forward, backward and computing gradient</li>
+<li>update weights by using SGD</li>
+<li>reload quantized weight from $\widehat{W}$ partially according to mask $T_l$</li>
+<li>repeating operations 2 to 4 with full training phase.</li>
+</ol>
+<p><strong>Repeat: </strong> repeat step1 to step 3 until all weights are quantized.</p>
+<h3 id="Experimental-Results"><a href="#Experimental-Results" class="headerlink" title="Experimental Results"></a>Experimental Results</h3><p>The authors adopted the proposed method to several model, including AlexNet, VGG-16, GoogleNet, ResNet-18 and ResNet-50. More experiments for exploration was conducted on ResNet-18. Experimental results on ImageNet using center crop validation are shown as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Network</th>
+<th style="text-align:left">Bit-width</th>
+<th>Top-1/Top-5 Error</th>
+<th>Decrease in Top-1/Top-5 Error</th>
+<th>Portion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AlexNet ref</td>
+<td style="text-align:left">32</td>
+<td>42.71%/19.77%</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>AlexNet</td>
+<td style="text-align:left">5</td>
+<td><strong>42.61%/19.54%</strong></td>
+<td>0.15%/0.23%</td>
+<td>{0.3, 0.6, 0.8, 1.0}</td>
+</tr>
+<tr>
+<td>VGG-16 ref</td>
+<td style="text-align:left">32</td>
+<td>31.46%/11.35%</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>VGG-16</td>
+<td style="text-align:left">5</td>
+<td><strong>29.18%/9.70%</strong></td>
+<td>2.28%/1.65%</td>
+<td>{0.5, 0.75, 0.875, 1.0}</td>
+</tr>
+<tr>
+<td>GoogleNet ref</td>
+<td style="text-align:left">32</td>
+<td>31.11%/10.97%</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>GoogleNet</td>
+<td style="text-align:left">5</td>
+<td><strong>30.98%/10.72%</strong></td>
+<td>0.13%/0.25%</td>
+<td>{0.2, 0.4, 0.6, 0.8, 1.0}</td>
+</tr>
+<tr>
+<td>ResNet-18 ref</td>
+<td style="text-align:left">32</td>
+<td>31.73%/11.31</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ResNet</td>
+<td style="text-align:left">5</td>
+<td><strong>31.02%/10.90%</strong></td>
+<td>0.71%/0.41</td>
+<td>{0.5, 0.75, 0.875, 1.0}</td>
+</tr>
+<tr>
+<td>ResNet-50 ref</td>
+<td style="text-align:left">32</td>
+<td>26.78%/8.76%</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ResNet-50</td>
+<td style="text-align:left">5</td>
+<td><strong>25.19%/7.55%</strong></td>
+<td>1.59%/1.21%</td>
+<td>{0.5, 0.75, 0.875, 1.0}</td>
+</tr>
+</tbody>
+</table>
+<p>Number of required epochs for training increasing with the expected bit-width going down. The accumulated portions for weight quantization are set as {0.3, 0.5, 0.8, 0.9, 0.95, 1.0}, {0.2, 0.4, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0}, {0.2, 0.4, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 0.975,  1.0} for 4-bits to 2-bits, respectively. Training epochs required for 2-bits finally set to 30 which means that 300 training epochs are required for completing a full quantization procedure. In the other words, the proposed method become time-consuming when the network going deeper.</p>
+<p>Although the authors convert weights to the powers of 2 and claim that their method would be efficient with binary shift operation in hardware, the computation in there experiments is still using floating operations. Thus they only show the results of model compression instead of speeding up computation.</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    iceory
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://iceory.com/2018/04/04/incremental-network-quantization/" title="INQ (Incremental Network Quantization)">http://iceory.com/2018/04/04/incremental-network-quantization/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/network-quantization/" rel="tag"># network quantization</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/04/dynamic-network-surgery/" rel="next" title="DNS (Dynamic Network Surgery)">
+                <i class="fa fa-chevron-left"></i> DNS (Dynamic Network Surgery)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/integer-arithmetic-only-inference/" rel="prev" title="Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference">
+                Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">iceory</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Weight-Quantization-Strategy"><span class="nav-number">1.</span> <span class="nav-text">Weight Quantization Strategy</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Proof-1-compute-factor-4-3-of-n-1"><span class="nav-number">1.1.</span> <span class="nav-text">Proof 1: compute factor 4/3 of $n_1$</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Proof-2-compute-n-2"><span class="nav-number">1.2.</span> <span class="nav-text">Proof 2: compute $n_2$</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Weight-Partition-Strategies"><span class="nav-number">2.</span> <span class="nav-text">Weight Partition Strategies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Implementation-in-PyTorch"><span class="nav-number">3.</span> <span class="nav-text">Implementation in PyTorch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Experimental-Results"><span class="nav-number">4.</span> <span class="nav-text">Experimental Results</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iceory</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

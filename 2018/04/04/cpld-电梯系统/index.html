@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CPLD,elevator,control," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="GitHub地址：https://github.com/ICEORY/ElevatorCPLD 整体方案设计项目本着“各个击破，各司其职”的指导思想进行设计。各个击破是指将整个电梯控制系统分为各个小模块进行设计，在完成小模块设计之后再进行组合最终实现需要的功能；各司其职指在设计的时候保证每个小模块执行自己要实现的功能，能够正确处理设计范围内的输入。 将整个控制系统根据功能细分为各个小功能模块，主要">
+<meta name="keywords" content="CPLD,elevator,control">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CPLD 五层楼的简易电梯控制系统">
+<meta property="og:url" content="http://iceory.com/2018/04/04/cpld-电梯系统/index.html">
+<meta property="og:site_name" content="iceory&#39;s blog">
+<meta property="og:description" content="GitHub地址：https://github.com/ICEORY/ElevatorCPLD 整体方案设计项目本着“各个击破，各司其职”的指导思想进行设计。各个击破是指将整个电梯控制系统分为各个小模块进行设计，在完成小模块设计之后再进行组合最终实现需要的功能；各司其职指在设计的时候保证每个小模块执行自己要实现的功能，能够正确处理设计范围内的输入。 将整个控制系统根据功能细分为各个小功能模块，主要">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/system_overview.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/elevator_running_logic.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/keyinput_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/keyinput_simulation.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/updownkey_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/updownkey_simulation.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/floorchoice_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/floorchoice_simulation.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/10fenpin_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/timescale_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/encode_le_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/encode_le_simulation.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/next_floor_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/motion_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/doormotor_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/100counter_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/5counter_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/5counter_simulation.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/floorruncount_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/otherwise_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/display_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/system_circuit.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/updown_1k_test.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/updown_test_system_logic.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/scene_test_input.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/scene_test_system_logic.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_system.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_timer.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_motor.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_keyinput.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_led_num_display.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_floor_bee.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_system_line.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/pcb_demo_front.jpg">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/demo_test_1.jpg">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/demo_test_2.jpg">
+<meta property="og:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/demo_test_3.jpg">
+<meta property="og:updated_time" content="2018-04-04T08:44:53.137Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CPLD 五层楼的简易电梯控制系统">
+<meta name="twitter:description" content="GitHub地址：https://github.com/ICEORY/ElevatorCPLD 整体方案设计项目本着“各个击破，各司其职”的指导思想进行设计。各个击破是指将整个电梯控制系统分为各个小模块进行设计，在完成小模块设计之后再进行组合最终实现需要的功能；各司其职指在设计的时候保证每个小模块执行自己要实现的功能，能够正确处理设计范围内的输入。 将整个控制系统根据功能细分为各个小功能模块，主要">
+<meta name="twitter:image" content="http://iceory.com/2018/04/04/cpld-电梯系统/system_overview.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iceory.com/2018/04/04/cpld-电梯系统/"/>
+
+
+
+
+
+  <title>CPLD 五层楼的简易电梯控制系统 | iceory's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iceory's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iceory.com/2018/04/04/cpld-电梯系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="iceory">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iceory's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CPLD 五层楼的简易电梯控制系统</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T16:24:10+08:00">
+                2018-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/my-works/" itemprop="url" rel="index">
+                    <span itemprop="name">my works</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>GitHub地址：<a href="https://github.com/ICEORY/ElevatorCPLD" target="_blank" rel="noopener">https://github.com/ICEORY/ElevatorCPLD</a></p>
+<h2 id="整体方案设计"><a href="#整体方案设计" class="headerlink" title="整体方案设计"></a>整体方案设计</h2><p>项目本着“各个击破，各司其职”的指导思想进行设计。各个击破是指将整个电梯控制系统分为各个小模块进行设计，在完成小模块设计之后再进行组合最终实现需要的功能；各司其职指在设计的时候保证每个小模块执行自己要实现的功能，能够正确处理设计范围内的输入。</p>
+<p>将整个控制系统根据功能细分为各个小功能模块，主要利用JK触发器74113o以及8-3编码器74148、数值比较器7485等数字模块搭建出系统需要的各个小模块，最后根据各个模块的之间的逻辑联系构建出整个系统。</p>
+<p>在使用QuartusII软件搭建各个模块时，每搭建一个功能模块就要对其输入输出逻辑进行仿真，保证其输入输出的波形图满足需要的逻辑功能。当每个模块都能各司其职时，最终搭建整个控制系统才能做到事半功倍，清晰有条理。<br><a id="more"></a><br>根据题目的设计要求，整个电梯控制系统结构图如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/system_overview.png" alt="system_overview"></p>
+<p>根据上述功能，将电路分为以下几个模块：</p>
+<table>
+<thead>
+<tr>
+<th>模块名称</th>
+<th>目标实现功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>keyinput</td>
+<td>获取单个按键输入，并能够存储按键状态，能够根据外部输入重置按键状态</td>
+</tr>
+<tr>
+<td>doormotor</td>
+<td>轿厢门电机，控制开关门动作，进行10ms计时，9s工作周期，其中开关门各一秒，停止7s，具有复位重新计时功能</td>
+</tr>
+<tr>
+<td>motion</td>
+<td>20s工作周期，能够根据上下行方向控制三相输出端的输出顺序</td>
+</tr>
+<tr>
+<td>timescale</td>
+<td>输入1KHZ时钟信号，进行分频之后输出1HZ,10HZ,100HZ,1KHZ的时钟信号</td>
+</tr>
+<tr>
+<td>floorcount</td>
+<td>输入楼层到达信号时上升沿触发，根据运行方向进行所存储的楼层数的加减，并输出计算结果</td>
+</tr>
+<tr>
+<td>nextfloor</td>
+<td>根据运行方向上的按键信息判断是否需要继续运行，判断是否需要开门，判断下次运行方向</td>
+</tr>
+<tr>
+<td>otherdevice</td>
+<td>对电梯其他辅助模块如蜂鸣器、排气、照明等设备进行控制</td>
+</tr>
+<tr>
+<td>display</td>
+<td>轿厢内、电梯门口的电梯所在楼层信息显示，包括所在楼层，运行方向</td>
+</tr>
+</tbody>
+</table>
+<p>电梯运行的逻辑如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/elevator_running_logic.png" alt="elevator_running_logic"></p>
+<h2 id="电路设计及原理说明"><a href="#电路设计及原理说明" class="headerlink" title="电路设计及原理说明"></a>电路设计及原理说明</h2><h3 id="按键电路设计"><a href="#按键电路设计" class="headerlink" title="按键电路设计"></a>按键电路设计</h3><h4 id="keyinput模块设计"><a href="#keyinput模块设计" class="headerlink" title="keyinput模块设计"></a>keyinput模块设计</h4><p>根据功能要求，该模块的应具备以下的输入输出端口：</p>
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KEY</td>
+<td>KEYSTATE</td>
+</tr>
+<tr>
+<td>DONE</td>
+<td>DO</td>
+</tr>
+<tr>
+<td>CLK</td>
+</tr>
+</tbody>
+</table>
+<p>在逻辑上应满足：</p>
+<ol>
+<li>接收到外界按键信息时，将输出的KEYSTATE强制为1；</li>
+<li>当接收到复位指令DONE=1时，将KEYSTATE复位为0，并输入DO信号，用于指示其他模块执行任务；如：用于开门信号；</li>
+</ol>
+<p>根据以上要求，使用JK触发器搭建该子模块,真值表如下：</p>
+<p>KEYSTATE真值表：</p>
+<table>
+<thead>
+<tr>
+<th>KEY</th>
+<th>DONE</th>
+<th>KEYSTATE</th>
+<th>KEYSTATE*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>DO真值表：</p>
+<table>
+<thead>
+<tr>
+<th>DONE</th>
+<th>KEYSTATE</th>
+<th>DO</th>
+<th>DO*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>根据计算得到的逻辑关系使用74113搭建出如下电路：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/keyinput_circuit.png" alt="keyinput_circuit"></p>
+<p>仿真结果如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/keyinput_simulation.png" alt="keyinput_simulation"></p>
+<h4 id="updownkey模块设计"><a href="#updownkey模块设计" class="headerlink" title="updownkey模块设计"></a>updownkey模块设计</h4><p>构建完单个按键的输入电路之后利用该模块进一步构建电梯上下行选择按键输入；该模块由由八个keyinput单元构成；其输入输出如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UP1~UP4</td>
+<td>KEYSTATE1~KEYSTATE8</td>
+</tr>
+<tr>
+<td>DOWN2~DOWN5</td>
+<td>DOOR`~DOOR5</td>
+</tr>
+<tr>
+<td>CLK</td>
+<td></td>
+</tr>
+<tr>
+<td>FLOORA~FLOORC</td>
+<td></td>
+</tr>
+<tr>
+<td>U/D</td>
+<td></td>
+</tr>
+<tr>
+<td>ARRIVE</td>
+</tr>
+</tbody>
+</table>
+<p>根据五层电梯的实际情况，一楼只有上行按钮，五楼只有下行按钮，中间三层具有上下行按钮，共八个按键输入，输出控制五层楼的轿厢外门电机，故具有五个门控制输出，八个按键状态输出。</p>
+<p>使用74138三-八译码器将输入的所在楼层信息译成八个按键状态的控制信息，其逻辑真值表如下：</p>
+<table>
+<thead>
+<tr>
+<th>FLOORC</th>
+<th>FLOORB</th>
+<th>FLOORA</th>
+<th>Y0</th>
+<th>Y1</th>
+<th>Y2</th>
+<th>Y3</th>
+<th>Y4</th>
+<th>Y5</th>
+<th>Y6</th>
+<th>Y7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>各个按键与输入的ARRIVE、U/D逻辑关系满足：（以Y2为例）</p>
+<table>
+<thead>
+<tr>
+<th>ARRIVE</th>
+<th>U/D</th>
+<th>Y2</th>
+<th>DONE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>该模块的输出DOOR逻辑上等于各个按键子模块输出的DO</p>
+<p>电路如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/updownkey_circuit.png" alt="updownkey_circuit"></p>
+<p>该模块整体仿真波形如下：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/updownkey_simulation.png" alt="updownkey_simulation"></p>
+<p>图中以第三层的上下行按键为例，在电梯没有到达三层时按下上下行按键，可见电梯不会进行开关门动作，并且将按键状态存储。在电梯到达三层时，由于电梯运行方向为上行（U/D=1），此时只判断上行方向的按键（KEYSTATE4），进行开门动作并将按键状态复位。电梯在三层的时候若运行方向改变为下行（U/D=0），此时进行开门动作，但由于同时在三层再次按下下行键故按键的按下状态一直持续到按键松开为止而，开门动作一直持续到楼层发生变化。可见，该模块设计符合实际电梯运行的逻辑。</p>
+<h4 id="floorchoice模块设计"><a href="#floorchoice模块设计" class="headerlink" title="floorchoice模块设计"></a>floorchoice模块设计</h4><p>电梯轿厢内的楼层选择仍选择用上述的按键模块，电路逻辑与updownkey模块的设计类似，其中keyinput模块满足：</p>
+<ol>
+<li>KEYDOWN=KEY；</li>
+<li>DONE=Y’ARRIVE’。</li>
+</ol>
+<p>Floorchoice模块同时控制轿厢门电机的运动：</p>
+<p>DOOR=DO1+D2+DO3+DO4+DO5;</p>
+<p>电路设计如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/floorchoice_circuit.png" alt="floorchoice_circuit"></p>
+<p>该模块整体仿真波形如下：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/floorchoice_simulation.png" alt="floorchoice_simulation"></p>
+<p>图中以一层与二层的按键选择为例，在电梯到达之前，根据输入将按键状态进行保存。在电梯到达相应楼层时进行开门动作并将对应按键复位。</p>
+<h3 id="时钟电路设计"><a href="#时钟电路设计" class="headerlink" title="时钟电路设计"></a>时钟电路设计</h3><h4 id="10fenpin-模块设计"><a href="#10fenpin-模块设计" class="headerlink" title="10fenpin 模块设计"></a>10fenpin 模块设计</h4><p>由于该电梯输入时钟频率为10kHz，故设计一个十分频电路将输入的时钟进行十分频，用于输出1Hz,10Hz,100Hz,1kHz等频率的时钟用于各个模块工作需要。使用74190十进制计数器作为分频核心模块，其逻辑真值表如下：</p>
+<table>
+<thead>
+<tr>
+<th>QD</th>
+<th>QC</th>
+<th>QB</th>
+<th>QA</th>
+<th>CO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>电路设计如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/10fenpin_circuit.png" alt="10fenpin_circuit"></p>
+<h4 id="timescale模块设计"><a href="#timescale模块设计" class="headerlink" title="timescale模块设计"></a>timescale模块设计</h4><p>使用上述10fenpin模块构建多频率输出的timescale模块用于提供各个模块的时钟信号。模块原理同异步计数器的设计原理，电路图如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/timescale_circuit.png" alt="timescale_circuit"></p>
+<h3 id="系统决策电路设计"><a href="#系统决策电路设计" class="headerlink" title="系统决策电路设计"></a>系统决策电路设计</h3><h4 id="ENCODE-LE模块设计"><a href="#ENCODE-LE模块设计" class="headerlink" title="ENCODE_LE模块设计"></a>ENCODE_LE模块设计</h4><p>由于8-三编码器74148是高位优先编码器，根据电梯上下楼层排序的需要，在下行时需要对输入进行低位优先编码，故以编码器74148为核心设计一个五-三低位优先编码器；设计原理是先将输入进行倒序处理,模块输入与74148芯片接口如下：</p>
+<table>
+<thead>
+<tr>
+<th>IN4</th>
+<th>0N</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IN3</td>
+<td>1N</td>
+</tr>
+<tr>
+<td>IN2</td>
+<td>2N</td>
+</tr>
+<tr>
+<td>IN1</td>
+<td>3N</td>
+</tr>
+<tr>
+<td>IN0</td>
+<td>4N</td>
+</tr>
+</tbody>
+</table>
+<p>根据上表可以对输入的低位进行优先编码，但由此导致了输出与输入的错位，使用门电路对输出进行校正，使输入IN0=1时，输出编码A2=0;A1=0;A3=0;真值表如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>A2N</th>
+<th>A1N</th>
+<th>A0N</th>
+<th>A2</th>
+<th>A1</th>
+<th>A0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>此外当外界没有输入时，A2=1，A1=1;A0=1;</p>
+<p>电路设计如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/encode_le_circuit.png" alt="encode_le_circuit"></p>
+<p>仿真波形如下图所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/encode_le_simulation.png" alt="encode_le_simulation"></p>
+<h4 id="nextfloor模块设计"><a href="#nextfloor模块设计" class="headerlink" title="nextfloor模块设计"></a>nextfloor模块设计</h4><p>使用上述构建的ENCODE_LF模块与高位优先编码器74148搭建电梯的核心决策模块nextfloor，该模块根据按键的输入以及当前电梯所在的楼层输出电梯即将进行的动作，输入输出列表如下：</p>
+<table>
+<thead>
+<tr>
+<th>KEYSTATE1~KEYSTATE8(上下行按键选择)</th>
+<th>OPEN（开门信号）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CHOICE1~CHOICE5（目标楼层选择）</td>
+<td>RUN（电梯运行信号）</td>
+</tr>
+<tr>
+<td>FLOORA~FLOORC（当前电梯的位置）</td>
+<td>DIR（电梯运行方向）</td>
+</tr>
+<tr>
+<td>CLK</td>
+</tr>
+</tbody>
+</table>
+<p>使用高位优先编码器对输入的KEYSTATE以及CHOICE进行高位优先编码，输出其中的按键的最大值并使用数值比较器7485将键值与当前电梯所处的楼层进行比较决定电梯是否继续运行，设U=1表示电梯上行方向上有按键按下，且键值大于当前楼层；U=0 表示电梯上行方向没有键值大于当前楼层的按键按下；设D=1 表示电梯下行方向有键值小于当前楼层的按键按下；D=0表示电梯下行方向没有键值小于当前楼层的按键按下；电梯是否继续运行的判断值RUN应该满足RUN=U+D;</p>
+<p>而电梯运行的方向DIR与U/D关系的真值表如下：</p>
+<table>
+<thead>
+<tr>
+<th>U</th>
+<th>D</th>
+<th>DIR</th>
+<th>DIR*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>X</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>X</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>当U/D均为0时需要对电梯的运行方向进行进一步的判断，U/D为零一般出现在第一次按下上下行按键时出现，此时电梯位置与按键所在楼层一致且没有其他按键按下，故设UE=1表示电梯所在位置有上行方向的按键按下且没有其他按键选择；DE=1表示电梯所在位置有下行方向的按键按下且没有其他按键选择；</p>
+<p>此时RUN=0,DIR与UE/DE的关系如下：</p>
+<table>
+<thead>
+<tr>
+<th>UE</th>
+<th>DE</th>
+<th>DIR</th>
+<th>DIR*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>开门信号OPEN=RUN’DE</p>
+<p>电路设计如下图所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/next_floor_circuit.png" alt="next_floor_circuit"></p>
+<h3 id="电机电路设计"><a href="#电机电路设计" class="headerlink" title="电机电路设计"></a>电机电路设计</h3><h4 id="motion模块设计"><a href="#motion模块设计" class="headerlink" title="motion模块设计"></a>motion模块设计</h4><p>由于本课题所使用的轿厢电机设定为四线三相步进电机，故需要根据输入的运行方向以及开门信号输出相应的三相电压的变化，电机正转时运行逻辑为A-B-C-A,反转时逻辑为A-C-B-A。使用双JK触发器74113构建三进制触发器，其计数顺序为00-01-10-00。</p>
+<p>Q2*Q1*的卡诺图如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>Q2  Q1</th>
+<th>0</th>
+<th>1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>01</td>
+<td>10</td>
+</tr>
+<tr>
+<td>1</td>
+<td>00</td>
+<td>XX</td>
+</tr>
+</tbody>
+</table>
+<p>​    电机控制输出的逻辑真值表如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>RUN</th>
+<th>U/D</th>
+<th>Q2Q1</th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>X</td>
+<td>X</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>01</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>11</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>00</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>01</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>10</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>此外根据题目要求，每两个楼层之间电机运行时间为20s，故使用十进制计数器74190与二进制计数器74161构成二十进制计数器。</p>
+<p>电路设计如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/motion_circuit.png" alt="motion_circuit"></p>
+<h4 id="doormotor模块设计"><a href="#doormotor模块设计" class="headerlink" title="doormotor模块设计"></a>doormotor模块设计</h4><p>在电梯到达目标楼层之后，电梯需要控制门电机依次执行以下动作：开门1s—停止7s—关门1s；其中在关门1s时间内根据电梯实际运行方向判断相应的按键输入，如上行时上行按键按下或者下行时下行按键按下则门重新打开，或者在门关闭时遇到障碍物也重新打开门。由分析可知，以上三种门重新打开的情况只需要归结为一个复位开门的指令给门电机控制模块即可。</p>
+<p>由于本课题的门电机选择直流电机，故只需要输出MOTOR1/MOTOR2控制电机的正反转。使用三个74161十六进制计数器搭建900进制计数器，输入100Hz时钟信号控制。在0s时启动MOTOR1，关闭MOTOR2，此时直流电机正转，在1s时关闭MOTOR1，同时保持MOTOR2关闭，此时直流电机不转，在8s时保持MOTOR1关闭，启动MOTOR2，此时直流电机反转，9s时关闭MOTOR2，同时输出电机关门完成信号。<em>**</em></p>
+<p>电路逻辑真值表如下：</p>
+<table>
+<thead>
+<tr>
+<th>RUN</th>
+<th>Q9~Q0</th>
+<th>MOTOR2  MOTOR1</th>
+<th>DONE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>XXXXXXXXXX</td>
+<td>00</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0000000000</td>
+<td>01</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0001100100</td>
+<td>00</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1100100000</td>
+<td>10</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1110000100</td>
+<td>00</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>电机运行复位，即计数清零端CLRN’真值表如下：</p>
+<table>
+<thead>
+<tr>
+<th>RUN</th>
+<th>MOTOR2</th>
+<th>RESET</th>
+<th>CLRN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>X</td>
+<td>X</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>X</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>则电路设计如下图所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/doormotor_circuit.png" alt="doormotor_circuit"></p>
+<h3 id="楼层计数电路设计"><a href="#楼层计数电路设计" class="headerlink" title="楼层计数电路设计"></a>楼层计数电路设计</h3><h4 id="100counter模块设计"><a href="#100counter模块设计" class="headerlink" title="100counter模块设计"></a>100counter模块设计</h4><p>根据题目要求需要对各个楼层进行运行次数计数，考虑到运行次数可能比较多，故采用100进制计数模块，该模块是由两个74190十进制计数器构成的异步计数器，电路原理图如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/100counter_circuit.png" alt="100counter_circuit"></p>
+<h4 id="5counter模块设计"><a href="#5counter模块设计" class="headerlink" title="5counter模块设计"></a>5counter模块设计</h4><p>楼层计数时为了节省数码管显示模块的数量，故增加对计数显示的选择按键，每按下一次按键显示的目标楼层自加1，从而实现用同一个对不同楼层计数的显示。由于该课题针对5层楼的电梯设计，故计数选择也是5进制的。为了节省芯片内部模块的资源，故设计该5进制模块用于计数选择。</p>
+<p>电路设计如下：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/5counter_circuit.png" alt="5counter_circuit"></p>
+<p>仿真波形如下：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/5counter_simulation.png" alt="5counter_simulation"></p>
+<h4 id="floorruncount模块设计"><a href="#floorruncount模块设计" class="headerlink" title="floorruncount模块设计"></a>floorruncount模块设计</h4><p>使用上述100进制计数器搭建每个楼层的运行次数计数模块，输入输出信号列表如下：</p>
+<table>
+<thead>
+<tr>
+<th>input</th>
+<th>output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLOORA~FLOORC</td>
+<td>FHLED-楼层计数十位显示</td>
+</tr>
+<tr>
+<td>DONE</td>
+<td>FLLED-楼层计数个位显示</td>
+</tr>
+<tr>
+<td>KEYINPUT</td>
+<td>CLED-按键选择楼层显示</td>
+</tr>
+</tbody>
+</table>
+<p>通过三八译码器将输入楼层信号译成五个楼层的选择信号，当DONE=1时该楼层计数增加1；设计原理updownkey模块类似。电路原理如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/floorruncount_circuit.png" alt="floorruncount_circuit"></p>
+<h3 id="排气、照明、蜂鸣器电路设计"><a href="#排气、照明、蜂鸣器电路设计" class="headerlink" title="排气、照明、蜂鸣器电路设计"></a>排气、照明、蜂鸣器电路设计</h3><h4 id="otherdevice模块设计"><a href="#otherdevice模块设计" class="headerlink" title="otherdevice模块设计"></a>otherdevice模块设计</h4><p>将题目要求的其他附属硬件要求整合在该模块中。该模块主要实现对电梯的照明排气、蜂鸣器的控制。根据题目要求可知蜂鸣器在电梯到达目标楼层时响起提示，在本设计中设置为响0.5s，故使用三个JK触发器构建满足以下真值表条件的计数器。</p>
+<table>
+<thead>
+<tr>
+<th>DONE</th>
+<th>Q2Q1Q0</th>
+<th>Q2<em>Q1</em>Q0*</th>
+<th>BEE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>XXX</td>
+<td>000</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>000</td>
+<td>001</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>001</td>
+<td>010</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>010</td>
+<td>011</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>100</td>
+<td>101</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>101</td>
+<td>110</td>
+<td>1</td>
+</tr>
+<tr>
+<td>0</td>
+<td>110</td>
+<td>110</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>BEE为蜂鸣器的总控制标志，与输入的FLOORA~FLOORC楼层信号配合决定各个楼层蜂鸣器的状态。</p>
+<p>电路设计如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/otherwise_circuit.png" alt="otherwise_circuit"></p>
+<h3 id="数码管显示电路设计"><a href="#数码管显示电路设计" class="headerlink" title="数码管显示电路设计"></a>数码管显示电路设计</h3><h4 id="display模块设计"><a href="#display模块设计" class="headerlink" title="display模块设计"></a>display模块设计</h4><p>根据题目要求，设计该模块用于轿厢内部以及电梯门外部的楼层信息显示，显示模块由一位数码管以及两个方向显示数码管构成，考虑到各个楼层的显示信息都是一致的，故只需要设计同一个信号输出端口即可。此外考虑到在设计中000表示第一层，100表示第五层，从人性化角度上应该做出如下转换：</p>
+<table>
+<thead>
+<tr>
+<th>FLOORC~FLOORA</th>
+<th>LEDC~LEDA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>000</td>
+<td>0001</td>
+</tr>
+<tr>
+<td>001</td>
+<td>010</td>
+</tr>
+<tr>
+<td>010</td>
+<td>011</td>
+</tr>
+<tr>
+<td>011</td>
+<td>100</td>
+</tr>
+<tr>
+<td>100</td>
+<td>101</td>
+</tr>
+</tbody>
+</table>
+<p>电梯运行方向的显示真值表如下：</p>
+<table>
+<thead>
+<tr>
+<th>RUN</th>
+<th>DIR</th>
+<th>UP</th>
+<th>DOWN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>X</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>电路设计如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/display_circuit.png" alt="display_circuit"></p>
+<h2 id="整机电路设计以及原理说明"><a href="#整机电路设计以及原理说明" class="headerlink" title="整机电路设计以及原理说明"></a>整机电路设计以及原理说明</h2><h3 id="整机电路设计"><a href="#整机电路设计" class="headerlink" title="整机电路设计"></a>整机电路设计</h3><p>根据第一节的系统设计框图将各个模块根据设计逻辑连接到一起，整体电路如下图所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/system_circuit.png" alt="system_circuit"></p>
+<h3 id="原理说明"><a href="#原理说明" class="headerlink" title="原理说明"></a>原理说明</h3><p>由于每个模块都各司其职，在第二节的设计中经过功能仿真保证了模块的功能实现。将各个模块的输入输出口对应相连即可实现第二章需要的功能。其中时钟模块输入为10KHz，输入各个频率信号到各模块，楼层计数模块输入信号为电梯轿厢电机运行结束的跳变信号，输出跳变之后的楼层信号到其他各个需要楼层信号的模块。此外核心决策模块，nextfloor主要根据按键的情况输出决策：RUN/DIR/OPEN 控制门电机以及轿厢电机的运行。因此将这些输出端口作为相关模块的输入。</p>
+<h2 id="性能测试及其结果"><a href="#性能测试及其结果" class="headerlink" title="性能测试及其结果"></a>性能测试及其结果</h2><h3 id="上下行按键测试"><a href="#上下行按键测试" class="headerlink" title="上下行按键测试"></a>上下行按键测试</h3><p>使用1KHz 的时钟信号，设置如下输入信号：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/updown_1k_test.png" alt="updown_1k_test"></p>
+<p>根据实际电梯运行的逻辑，由于首先按下的是上行按钮，故电梯在一楼会先开门，然后由于在开门过程中一次接收到来自DOWN2、DOWN3、UP2、DOWN4、DOWN5、UP3、UP4 的上下行按键信号，由于这些按键按下都是在电梯处于一楼开门过程发生的，因此电梯会对这些信息按照上下行的方向进行排序。一楼为上行优先，故排序结果为UP2、UP3、UP4、DOWN5、DOWN4、DOWN3、DOWN2，这意味着电梯会一次从一楼运行到五楼，再从五楼运行到二楼停止，在这过程中每一层楼都会开门一次，而且每次开门都会有一个提示音响起。</p>
+<p>在电梯运行结束之后，保持运行方向的数据不变，电梯内的排气以及照明关闭。逻辑运行仿真图如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/updown_test_system_logic.png" alt="updown_test_system_logic"></p>
+<p>可见整个电梯运行逻辑符合现实运行的逻辑顺序。此外由于电梯在整个过程中在二楼开门次数为2 次，故根据楼层计数显示，二楼的计数次数为2次。而在楼层次数显示的选择按钮按下之前，系统显示的是1 楼的数据，开门之后一楼的运行次数为1.选择按钮按下之后，显示跳变为二楼的次数，此时为0 次；</p>
+<h3 id="情景模拟测试"><a href="#情景模拟测试" class="headerlink" title="情景模拟测试"></a>情景模拟测试</h3><p>初始状态下电梯停靠在一楼，并且电梯门关闭。此时在2 楼有人按下上行按键打算去五楼，而在他按下之后在4 楼有人按下下行按键打算去一楼，模拟输入如下所示：</p>
+<p><img src="/2018/04/04/cpld-电梯系统/scene_test_input.png" alt="scene_test_input"></p>
+<p>根据实际的运行逻辑，电梯在一楼不开门直接上行到二楼并开门，进入到电梯之后按下五楼的选择按键，在这过程中恰好四楼有人按下下行按键。电梯开始上行到五楼，进行开门动作，之后电梯下行到四楼开门，人进去之后按下一楼运行按键，电梯运行到一楼之后开门并停止。在楼层计数方面，先不输入选择信号，此时显示的是1 楼运行次数。根据设计原理，1楼的运行次数在电梯在一楼开门之后为由0 变为1。此后保持不变。</p>
+<p>仿真结果如下，在该输入信号之下系统可以实现符合现实逻辑的输出。</p>
+<p><img src="/2018/04/04/cpld-电梯系统/scene_test_system_logic.png" alt="scene_test_system_logic"></p>
+<h2 id="遇到的问题以及解决方案"><a href="#遇到的问题以及解决方案" class="headerlink" title="遇到的问题以及解决方案"></a>遇到的问题以及解决方案</h2><h3 id="模块化编程的问题"><a href="#模块化编程的问题" class="headerlink" title="模块化编程的问题"></a>模块化编程的问题</h3><p>由于刚接接触QuartusII 软件的设计，对模块化设计还是比较陌生的。但由于之前用c 语言编程的时候习惯用h 文件对各个子程序进行模块设计故在开始本次电梯设计的时候便碰到如何使用该软件进行模块设计的问题。</p>
+<p>在查阅了相关资料之后总结以下几点：</p>
+<ol>
+<li>设计流程：先建立BDF 文件进行电路设计，然后点击FILE 里面的Create Symbol File 即可生成该模块；</li>
+<li>各个模块需要功能明确，模块名称以功能命名；</li>
+<li>每个模块都有两个文件，包括bdf 以及bsf两个文件，这样两个文件的名称一定要一致，并且在设计完成之后不可删除bdf 文件，否则模块会出错；</li>
+</ol>
+<h3 id="仿真时间的设置"><a href="#仿真时间的设置" class="headerlink" title="仿真时间的设置"></a>仿真时间的设置</h3><p>一般来说系统的仿真时间默认为1ms，所以在需要进行比较长的仿真就需要对系统的仿真时间进行修改。通过查阅资料可知具体操作为：点击EDIT菜单选择EndTime，将时间修改为需要的时间即可。</p>
+<h3 id="输出端口的合并"><a href="#输出端口的合并" class="headerlink" title="输出端口的合并"></a>输出端口的合并</h3><p>在仿真的时候，如果具有很多的输出端口，便会对同步观察波形产生一定的困难。如果有一些端口，如表示楼层的三个端口，则可以将其合并显</p>
+<p>示为10 进制的数。 </p>
+<p>操作为：选择需要合并的端口，点击右键Group，并命名即可。这样会大大缩减端口量，也便于观察。</p>
+<h3 id="关于Timing-跟Functional-仿真的区别"><a href="#关于Timing-跟Functional-仿真的区别" class="headerlink" title="关于Timing 跟Functional 仿真的区别"></a>关于Timing 跟Functional 仿真的区别</h3><p>在仿真中一般选择Functional 进行仿真，有时错点为Timing 仿真之后波形图会变得出乎意料。主要原因是，Functional 仿真只是针对于功能的仿真，对时间要求不高。而Timing 仿真则是充分考虑了竞争冒险以及线延时等时间上的问题，故仿真的结果比较接近现实，更容易发现竞争冒险的问题。</p>
+<h3 id="关于out-of-block的解决方案"><a href="#关于out-of-block的解决方案" class="headerlink" title="关于out of block的解决方案"></a>关于out of block的解决方案</h3><p>由于所使用的模块为CPM240T系列的芯片，该芯片限制用户最多只能使用240个block，在设计的时候通过compile的filter中的report可以查询实际使用的资源情况，包括每个模块包含的block信息等。在本次电梯设计中，由于项目比较复杂，故到后来即使出现了一些bug也不能通过编程解决。出现的问题包括：在选择楼层计数模块中原来按照100计数的模块由于该out of block的原因退而选择了40进制计数，每个子模块减少2个JK触发器。此外，该电梯在设计本身存在一个bug，也就是在关门1s内按下按键时可以恢复开门状态。但在设计的时候统一设计为按下任意门按键即可开门，无论是哪个楼层。该问题的解决方案是通过把一个或门改为相应的多个与或门即可，但由于block的限制，未能付诸实施。在本次的电梯设计中，通过多次对模块的简化，最终使用block数量为238个，使用率达99%。</p>
+<p>关于降低block的使用率有以下几个方法：</p>
+<ol>
+<li>降低IO口使用数量，由于QuartuesII本身具有很强的优化功能，故降低IO口的的使用数量可以有效的简化模块，使block使用率大幅度降低。例如原来使用200以上个block，但删除一个没必要的IO端口之后可以降低到100左右；</li>
+<li>降低JK触发器的使用，因为每个JK触发器在计算上是一个block，因此从理论上降低一个触发器也就减少了一个block，这也是个人将计数从100进制降低到40进制的原因。</li>
+<li>减少一些与或非门等门电路的使用，这个方法不一定凑效。因为系统本身优化的原因，有一些门电路实际上已经是被优化过了，存不存在其实没多大关系。但有一些没被简化过的，通过个人的简化可以降低block的使用。</li>
+</ol>
+<h3 id="关于按键初始状态的说明"><a href="#关于按键初始状态的说明" class="headerlink" title="关于按键初始状态的说明"></a>关于按键初始状态的说明</h3><p>初始设计为按键默认为低电平状态，在按下的时候出现高电平，但是由于PCB设计的原因后来改为初始状态为高电平，按下时低电平有效。PCB设计原来考虑CPLD芯片的引脚在初始状态应该为低电平，但实际为需要接入上拉电阻才能作为按键输入。否则一直保持低电平状态，并不会变为高电平。但由于设计的错误，最终只能外接上拉电阻，导致按键初始状态为高电平，按下时由于引脚接地而变为高电平。因此，在硬件固定之后只能通过改软件的设计来适应。故在本文中提及的功能不变而各个模块会出现一些出入。特此说明。</p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="设计文件中模块名称与对应的功能说明"><a href="#设计文件中模块名称与对应的功能说明" class="headerlink" title="设计文件中模块名称与对应的功能说明"></a>设计文件中模块名称与对应的功能说明</h3><table>
+<thead>
+<tr>
+<th>模块名称</th>
+<th>对应功能</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10fenpin.bsf</td>
+<td>10分频电路</td>
+<td></td>
+</tr>
+<tr>
+<td>100counter.bsf</td>
+<td>100进制计数器</td>
+<td></td>
+</tr>
+<tr>
+<td>display.bsf</td>
+<td>轿厢以及电梯门口数码管显示</td>
+<td></td>
+</tr>
+<tr>
+<td>doormotor.bsf</td>
+<td>门电机控制模块</td>
+<td></td>
+</tr>
+<tr>
+<td>ENCODE_LF.bsf</td>
+<td>低位优先8-3编码器</td>
+<td></td>
+</tr>
+<tr>
+<td>floorchoice.bsf</td>
+<td>轿厢内楼层选择按键输入</td>
+<td></td>
+</tr>
+<tr>
+<td>keyinput.bsf</td>
+<td>按键输入模块</td>
+<td></td>
+</tr>
+<tr>
+<td>motion.bsf</td>
+<td>电梯轿厢电机控制模块</td>
+<td></td>
+</tr>
+<tr>
+<td>otherdevice.bsf</td>
+<td>蜂鸣器、排气、照明电路控制模块</td>
+<td></td>
+</tr>
+<tr>
+<td>timescale.bsf</td>
+<td>时钟输入模块</td>
+<td>输入1KHZ，输出10、100、1KHZ</td>
+</tr>
+<tr>
+<td>nextfloor.bsf</td>
+<td>电梯运行逻辑判断模块</td>
+<td>判断是否运行、是否停层以及运行方向</td>
+</tr>
+<tr>
+<td>updownkey.bsf</td>
+<td>上下行按键输入模块</td>
+<td></td>
+</tr>
+<tr>
+<td>elevator.qpf</td>
+<td>整机电路</td>
+<td></td>
+</tr>
+<tr>
+<td>floorruncount</td>
+<td>楼层运行次数计数</td>
+<td></td>
+</tr>
+<tr>
+<td>5counter</td>
+<td>5进制计数器</td>
+<td></td>
+</tr>
+<tr>
+<td>10counter</td>
+<td>10进制计数器</td>
+<td></td>
+</tr>
+<tr>
+<td>4counter</td>
+<td>4进制计数器</td>
+</tr>
+</tbody>
+</table>
+<h3 id="PCB制板电路原理图"><a href="#PCB制板电路原理图" class="headerlink" title="PCB制板电路原理图"></a>PCB制板电路原理图</h3><h4 id="整体电路原理"><a href="#整体电路原理" class="headerlink" title="整体电路原理"></a>整体电路原理</h4><p><img src="/2018/04/04/cpld-电梯系统/pcb_system.png" alt="pcb_system"></p>
+<h4 id="时钟电路"><a href="#时钟电路" class="headerlink" title="时钟电路"></a>时钟电路</h4><p><img src="/2018/04/04/cpld-电梯系统/pcb_timer.png" alt="pcb_timer"></p>
+<h4 id="电机电路"><a href="#电机电路" class="headerlink" title="电机电路"></a>电机电路</h4><p><img src="/2018/04/04/cpld-电梯系统/pcb_motor.png" alt="pcb_motor"></p>
+<h4 id="按键输入"><a href="#按键输入" class="headerlink" title="按键输入"></a>按键输入</h4><p><img src="/2018/04/04/cpld-电梯系统/pcb_keyinput.png" alt="pcb_keyinput"></p>
+<h4 id="数码管显示"><a href="#数码管显示" class="headerlink" title="数码管显示"></a>数码管显示</h4><p><img src="/2018/04/04/cpld-电梯系统/pcb_led_num_display.png" alt="pcb_led_num_display"></p>
+<h4 id="楼层指示及蜂鸣器"><a href="#楼层指示及蜂鸣器" class="headerlink" title="楼层指示及蜂鸣器"></a>楼层指示及蜂鸣器</h4><p><img src="/2018/04/04/cpld-电梯系统/pcb_floor_bee.png" alt="pcb_floor_bee"></p>
+<h3 id="PCB布线图"><a href="#PCB布线图" class="headerlink" title="PCB布线图"></a>PCB布线图</h3><p><img src="/2018/04/04/cpld-电梯系统/pcb_system_line.png" alt="pcb_system_line"></p>
+<h3 id="样板测试"><a href="#样板测试" class="headerlink" title="样板测试"></a>样板测试</h3><p><img src="/2018/04/04/cpld-电梯系统/pcb_demo_front.jpg" alt="pcb_demo_front"></p>
+<p><img src="/2018/04/04/cpld-电梯系统/demo_test_1.jpg" alt="demo_test_1"></p>
+<p><img src="/2018/04/04/cpld-电梯系统/demo_test_2.jpg" alt="demo_test_2"></p>
+<p><img src="/2018/04/04/cpld-电梯系统/demo_test_3.jpg" alt="demo_test_3"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    iceory
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://iceory.com/2018/04/04/cpld-电梯系统/" title="CPLD 五层楼的简易电梯控制系统">http://iceory.com/2018/04/04/cpld-电梯系统/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CPLD/" rel="tag"># CPLD</a>
+          
+            <a href="/tags/elevator/" rel="tag"># elevator</a>
+          
+            <a href="/tags/control/" rel="tag"># control</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/04/c-helloworld-game/" rel="next" title="c++ Hello World Game">
+                <i class="fa fa-chevron-left"></i> c++ Hello World Game
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/mfc-五子棋/" rel="prev" title="mfc 五子棋">
+                mfc 五子棋 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">iceory</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#整体方案设计"><span class="nav-number">1.</span> <span class="nav-text">整体方案设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#电路设计及原理说明"><span class="nav-number">2.</span> <span class="nav-text">电路设计及原理说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#按键电路设计"><span class="nav-number">2.1.</span> <span class="nav-text">按键电路设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#keyinput模块设计"><span class="nav-number">2.1.1.</span> <span class="nav-text">keyinput模块设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#updownkey模块设计"><span class="nav-number">2.1.2.</span> <span class="nav-text">updownkey模块设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#floorchoice模块设计"><span class="nav-number">2.1.3.</span> <span class="nav-text">floorchoice模块设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时钟电路设计"><span class="nav-number">2.2.</span> <span class="nav-text">时钟电路设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10fenpin-模块设计"><span class="nav-number">2.2.1.</span> <span class="nav-text">10fenpin 模块设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#timescale模块设计"><span class="nav-number">2.2.2.</span> <span class="nav-text">timescale模块设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#系统决策电路设计"><span class="nav-number">2.3.</span> <span class="nav-text">系统决策电路设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ENCODE-LE模块设计"><span class="nav-number">2.3.1.</span> <span class="nav-text">ENCODE_LE模块设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#nextfloor模块设计"><span class="nav-number">2.3.2.</span> <span class="nav-text">nextfloor模块设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#电机电路设计"><span class="nav-number">2.4.</span> <span class="nav-text">电机电路设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#motion模块设计"><span class="nav-number">2.4.1.</span> <span class="nav-text">motion模块设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#doormotor模块设计"><span class="nav-number">2.4.2.</span> <span class="nav-text">doormotor模块设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#楼层计数电路设计"><span class="nav-number">2.5.</span> <span class="nav-text">楼层计数电路设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#100counter模块设计"><span class="nav-number">2.5.1.</span> <span class="nav-text">100counter模块设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5counter模块设计"><span class="nav-number">2.5.2.</span> <span class="nav-text">5counter模块设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#floorruncount模块设计"><span class="nav-number">2.5.3.</span> <span class="nav-text">floorruncount模块设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排气、照明、蜂鸣器电路设计"><span class="nav-number">2.6.</span> <span class="nav-text">排气、照明、蜂鸣器电路设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#otherdevice模块设计"><span class="nav-number">2.6.1.</span> <span class="nav-text">otherdevice模块设计</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数码管显示电路设计"><span class="nav-number">2.7.</span> <span class="nav-text">数码管显示电路设计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#display模块设计"><span class="nav-number">2.7.1.</span> <span class="nav-text">display模块设计</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整机电路设计以及原理说明"><span class="nav-number">3.</span> <span class="nav-text">整机电路设计以及原理说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整机电路设计"><span class="nav-number">3.1.</span> <span class="nav-text">整机电路设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理说明"><span class="nav-number">3.2.</span> <span class="nav-text">原理说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能测试及其结果"><span class="nav-number">4.</span> <span class="nav-text">性能测试及其结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#上下行按键测试"><span class="nav-number">4.1.</span> <span class="nav-text">上下行按键测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#情景模拟测试"><span class="nav-number">4.2.</span> <span class="nav-text">情景模拟测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遇到的问题以及解决方案"><span class="nav-number">5.</span> <span class="nav-text">遇到的问题以及解决方案</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模块化编程的问题"><span class="nav-number">5.1.</span> <span class="nav-text">模块化编程的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#仿真时间的设置"><span class="nav-number">5.2.</span> <span class="nav-text">仿真时间的设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输出端口的合并"><span class="nav-number">5.3.</span> <span class="nav-text">输出端口的合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于Timing-跟Functional-仿真的区别"><span class="nav-number">5.4.</span> <span class="nav-text">关于Timing 跟Functional 仿真的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于out-of-block的解决方案"><span class="nav-number">5.5.</span> <span class="nav-text">关于out of block的解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于按键初始状态的说明"><span class="nav-number">5.6.</span> <span class="nav-text">关于按键初始状态的说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">6.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设计文件中模块名称与对应的功能说明"><span class="nav-number">6.1.</span> <span class="nav-text">设计文件中模块名称与对应的功能说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCB制板电路原理图"><span class="nav-number">6.2.</span> <span class="nav-text">PCB制板电路原理图</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#整体电路原理"><span class="nav-number">6.2.1.</span> <span class="nav-text">整体电路原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#时钟电路"><span class="nav-number">6.2.2.</span> <span class="nav-text">时钟电路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#电机电路"><span class="nav-number">6.2.3.</span> <span class="nav-text">电机电路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#按键输入"><span class="nav-number">6.2.4.</span> <span class="nav-text">按键输入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数码管显示"><span class="nav-number">6.2.5.</span> <span class="nav-text">数码管显示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#楼层指示及蜂鸣器"><span class="nav-number">6.2.6.</span> <span class="nav-text">楼层指示及蜂鸣器</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCB布线图"><span class="nav-number">6.3.</span> <span class="nav-text">PCB布线图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#样板测试"><span class="nav-number">6.4.</span> <span class="nav-text">样板测试</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iceory</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="network quantization," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Paper: https://arxiv.org/abs/1712.05877 Code: refer to TensorFlowLite.quantize Training with simulated quantizationPoint-wise quantization:$$clamp(r;a,b) := min(max(r, a), b)$$ $$s(a,b,n) := \frac{b-a">
+<meta name="keywords" content="network quantization">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference">
+<meta property="og:url" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/index.html">
+<meta property="og:site_name" content="iceory&#39;s blog">
+<meta property="og:description" content="Paper: https://arxiv.org/abs/1712.05877 Code: refer to TensorFlowLite.quantize Training with simulated quantizationPoint-wise quantization:$$clamp(r;a,b) := min(max(r, a), b)$$ $$s(a,b,n) := \frac{b-a">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/simple_origin.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/simple_quantize.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/bypass_origin.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/bypass_quantize.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/conv_bn_training.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/conv_bn_inference.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold_quantize.png">
+<meta property="og:updated_time" content="2018-04-04T08:46:06.889Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference">
+<meta name="twitter:description" content="Paper: https://arxiv.org/abs/1712.05877 Code: refer to TensorFlowLite.quantize Training with simulated quantizationPoint-wise quantization:$$clamp(r;a,b) := min(max(r, a), b)$$ $$s(a,b,n) := \frac{b-a">
+<meta name="twitter:image" content="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/simple_origin.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/"/>
+
+
+
+
+
+  <title>Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference | iceory's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iceory's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="iceory">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iceory's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T15:51:30+08:00">
+                2018-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network-quantization/" itemprop="url" rel="index">
+                    <span itemprop="name">network quantization</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>Paper</strong>: <a href="https://arxiv.org/abs/1712.05877" target="_blank" rel="noopener">https://arxiv.org/abs/1712.05877</a></p>
+<p><strong>Code</strong>: refer to TensorFlowLite.quantize</p>
+<h2 id="Training-with-simulated-quantization"><a href="#Training-with-simulated-quantization" class="headerlink" title="Training with simulated quantization"></a>Training with simulated quantization</h2><h3 id="Point-wise-quantization"><a href="#Point-wise-quantization" class="headerlink" title="Point-wise quantization:"></a>Point-wise quantization:</h3><p>$$<br>clamp(r;a,b) := min(max(r, a), b)<br>$$</p>
+<p>$$<br>s(a,b,n) := \frac{b-a}{n-1}<br>$$</p>
+<p>$$<br>q(r;a,b,n):=\lfloor \frac{clamp(r;a,b)-a}{s(a,b,n)} \rceil s(a,b,n)+a<br>$$<br><a id="more"></a><br>Here, $r$ represents the real value, $q$ represents the quantized value. $\lfloor \cdot \rceil$ denotes rounding to the nearest integer.</p>
+<ul>
+<li><p>for weights: $a:=min(w), b:=max(w)$</p>
+</li>
+<li><p>for activation: collect [a;b] during training and aggregate them via exponential moving average (EMA)</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">exponential moving average (EMA) in tensorflow:</span><br><span class="line"></span><br><span class="line">shallow_variable -= (1-decay) * (shallow_variable-variable)</span><br><span class="line"></span><br><span class="line">reasonable values for decay are close to 1.0, e.g., 0.999, 0.99999, etc</span><br></pre></td></tr></table></figure>
+<p><strong>Note: activation quantization is disabled at the start of training</strong> </p>
+<h3 id="compute-gradient"><a href="#compute-gradient" class="headerlink" title="compute gradient"></a>compute gradient</h3><p>$$<br>\frac{\partial{L}}{\partial{r}} = \frac{\partial{L}}{\partial{q}}\frac{\partial{q}}{\partial{r}}<br>$$</p>
+<p>Here, we have $\frac{\partial{q}}{\partial{r}}=0$ if $r\notin[a,b]$, otherwise $\frac{\partial{q}}{\partial{r}}=1$.</p>
+<h2 id="Inference-with-integer-arithmetic-only"><a href="#Inference-with-integer-arithmetic-only" class="headerlink" title="Inference with integer-arithmetic only"></a>Inference with integer-arithmetic only</h2><h3 id="Data-type"><a href="#Data-type" class="headerlink" title="Data type"></a>Data type</h3><ul>
+<li><p>input: uint8</p>
+</li>
+<li><p>weights: uint8</p>
+</li>
+<li><p>bias: int32</p>
+</li>
+<li><p>activation: int32</p>
+</li>
+<li><p>output: uint8</p>
+</li>
+</ul>
+<h3 id="Affine-mapping-from-q-to-r"><a href="#Affine-mapping-from-q-to-r" class="headerlink" title="Affine mapping from q to r"></a>Affine mapping from q to r</h3><p>Formulation:</p>
+<p>$$<br>r = S(q-Z) \to q=\frac{r}{S}+Z<br>$$</p>
+<p>where $S$ means “Scale” and $Z$ means “Zero point”. And $S=s(a,b,n), Z=z(a,b,n)$.</p>
+<p>Therefore, considering $r_3=r_1*r_2$:</p>
+<p>$$<br>r_3 = S_3(q_3-Z_3), r_1*r_2=S_1S_2(q_1-Z_1)(q_2-Z_2)<br>$$</p>
+<p>$$<br>q_3 = \frac{S_1S_2}{S_3}(q_1-Z_1)(q_2-Z_2)+Z_3<br>$$</p>
+<p>Let $M:=\frac{S_1S_2}{S_3}$ and $M=2^{-n}M_0$, $M_0\in(0.5,1]$.</p>
+<p>For matrix multiplication of two matrices with size of $N\times N$.</p>
+<p>$$<br>q_3^{(i,k)} = Z_3 +M\sum_{j=1}^{N}(q_1^{(i,j)}-Z_1)(q_2^{(j,k)}-Z_2)<br>$$</p>
+<p>It needs $O(N^3)$ subtraction to compute the result. </p>
+<p>More efficient implementation:</p>
+<p>$$<br>q_3^{(i,k)} = Z_3 + M(\sum_{j=1}^N q_1^{(i,j)}q_2^{(j,k)}-\sum_{j=1}^N q_1^{(i,j)}Z_2-\sum_{j=1}^N q_2^{(j,k)}Z_1 + \sum_{j=1}^N Z_1Z_2)<br>$$</p>
+<p>$$<br>q_3^{(i,k)} = Z_3 + M(\sum_{j=1}^N q_1^{(i,j)}q_2^{(j,k)}-Z_2 \bar a_1^{(i)}- Z_1a_2^{(k)} + N Z_1Z_2),<br>$$</p>
+<p>where $\bar a_1^{(i)}:=\sum_{j=1}^N q_1^{(i,j)}$ and $a_2^{(k)}:=\sum_{j=1}^N q_2^{(j,k)}$. Therefore, the computational costs is mainly from the computation of $\sum_{j=1}^N q_1^{(i,j)}q_2^{(j,k)}$</p>
+<h3 id="The-Following-operations"><a href="#The-Following-operations" class="headerlink" title="The Following operations"></a>The Following operations</h3><ul>
+<li><p>scale down: int32 activation –&gt; int8 output activation</p>
+</li>
+<li><p>cast down: int8 activation –&gt; uint8 output</p>
+</li>
+</ul>
+<h3 id="Batch-normalization-folding"><a href="#Batch-normalization-folding" class="headerlink" title="Batch normalization folding"></a>Batch normalization folding</h3><p>$$<br>w_{fold}:=\frac{\gamma w}{\sqrt{EMA(\sigma_B^2)+\epsilon}}<br>$$</p>
+<h3 id="Graph-illustration"><a href="#Graph-illustration" class="headerlink" title="Graph illustration"></a>Graph illustration</h3><h4 id="simple-graph-for-single-layer"><a href="#simple-graph-for-single-layer" class="headerlink" title="simple graph for single layer"></a>simple graph for single layer</h4><ul>
+<li>origin</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/simple_origin.png" alt="simple_graph_origin"></p>
+<ul>
+<li>quantized</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/simple_quantize.png" alt="simple_graph_origin"></p>
+<h4 id="layer-with-bypass"><a href="#layer-with-bypass" class="headerlink" title="layer with bypass"></a>layer with bypass</h4><ul>
+<li>origin</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/bypass_origin.png" alt="simple_graph_origin"></p>
+<ul>
+<li>quantized</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/bypass_quantize.png" alt="simple_graph_origin"></p>
+<h4 id="convolutional-layer-with-batch-normalization"><a href="#convolutional-layer-with-batch-normalization" class="headerlink" title="convolutional layer with batch normalization"></a>convolutional layer with batch normalization</h4><ul>
+<li>training</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_training.png" alt="simple_graph_origin"></p>
+<ul>
+<li>inference</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_inference.png" alt="simple_graph_origin"></p>
+<ul>
+<li>training with fold</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold.png" alt="simple_graph_origin"></p>
+<ul>
+<li>training with fold quantized</li>
+</ul>
+<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold_quantize.png" alt="simple_graph_origin"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    iceory
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://iceory.com/2018/04/04/integer-arithmetic-only-inference/" title="Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference">http://iceory.com/2018/04/04/integer-arithmetic-only-inference/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/network-quantization/" rel="tag"># network quantization</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/04/incremental-network-quantization/" rel="next" title="INQ (Incremental Network Quantization)">
+                <i class="fa fa-chevron-left"></i> INQ (Incremental Network Quantization)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/ternary-weight-networks/" rel="prev" title="TWN (Ternary Weight Networks)">
+                TWN (Ternary Weight Networks) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">iceory</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Training-with-simulated-quantization"><span class="nav-number">1.</span> <span class="nav-text">Training with simulated quantization</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Point-wise-quantization"><span class="nav-number">1.1.</span> <span class="nav-text">Point-wise quantization:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#compute-gradient"><span class="nav-number">1.2.</span> <span class="nav-text">compute gradient</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inference-with-integer-arithmetic-only"><span class="nav-number">2.</span> <span class="nav-text">Inference with integer-arithmetic only</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-type"><span class="nav-number">2.1.</span> <span class="nav-text">Data type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Affine-mapping-from-q-to-r"><span class="nav-number">2.2.</span> <span class="nav-text">Affine mapping from q to r</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Following-operations"><span class="nav-number">2.3.</span> <span class="nav-text">The Following operations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Batch-normalization-folding"><span class="nav-number">2.4.</span> <span class="nav-text">Batch normalization folding</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Graph-illustration"><span class="nav-number">2.5.</span> <span class="nav-text">Graph illustration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#simple-graph-for-single-layer"><span class="nav-number">2.5.1.</span> <span class="nav-text">simple graph for single layer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#layer-with-bypass"><span class="nav-number">2.5.2.</span> <span class="nav-text">layer with bypass</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#convolutional-layer-with-batch-normalization"><span class="nav-number">2.5.3.</span> <span class="nav-text">convolutional layer with batch normalization</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iceory</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

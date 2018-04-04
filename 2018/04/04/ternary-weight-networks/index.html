@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="network quantization," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="The authors introduced ternary weight networks (TWNs) to address the limited storage and computational resources issues in hardware. The quantization problem can be formulated as follows:$$\begin{case">
+<meta name="keywords" content="network quantization">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TWN (Ternary Weight Networks)">
+<meta property="og:url" content="http://iceory.com/2018/04/04/ternary-weight-networks/index.html">
+<meta property="og:site_name" content="iceory&#39;s blog">
+<meta property="og:description" content="The authors introduced ternary weight networks (TWNs) to address the limited storage and computational resources issues in hardware. The quantization problem can be formulated as follows:$$\begin{case">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-04T08:46:49.635Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TWN (Ternary Weight Networks)">
+<meta name="twitter:description" content="The authors introduced ternary weight networks (TWNs) to address the limited storage and computational resources issues in hardware. The quantization problem can be formulated as follows:$$\begin{case">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iceory.com/2018/04/04/ternary-weight-networks/"/>
+
+
+
+
+
+  <title>TWN (Ternary Weight Networks) | iceory's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iceory's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iceory.com/2018/04/04/ternary-weight-networks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="iceory">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iceory's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">TWN (Ternary Weight Networks)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T15:57:47+08:00">
+                2018-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network-quantization/" itemprop="url" rel="index">
+                    <span itemprop="name">network quantization</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>The authors introduced <a href="https://www.researchgate.net/publication/303270485_Ternary_Weight_Networks?ev=auth_pub" target="_blank" rel="noopener">ternary weight networks</a> (TWNs) to address the limited storage and computational resources issues in hardware. The quantization problem can be formulated as follows:<br>$$<br>\begin{cases}<br>\alpha^*, W^{t*} = &amp;\arg\min_{\alpha, W^t} J(\alpha, W^t) = |W-\alpha W^t|_2^2 \\<br>s.t. &amp; a\ge0, W_i^t\in{-1,0,1}, i=1,2,\dots, n.<br>\end{cases} \tag{1}<br>$$<br>Here $n$ is the size of filter, $W$ represents weights of the network. With $W\approx \alpha W^t$ and assuming the convolutional layer do not have bias term, forward propagation of ternary weight networks is as follows:<br>$$<br>\begin{cases}<br>Z &amp; = &amp;X*W \approx X*(\alpha W^t) = (\alpha X)\oplus W^t \\<br>X^{next} &amp; = &amp; g(Z)<br>\end{cases} \tag{2}<br>$$<br>where $X$ indicates inputs, $*$ indicates convolutional operation, $g$ is the non-linear activation function, $\oplus$ indicates the inner product or convolutional operation without any multiplication, $X^{next}$ indicates the outputs.<br><a id="more"></a><br>The approximated solution of $W$ with threshold-based ternary function is as follows:<br>$$<br>W_i^t = f_t(W_i|\triangle) =<br>\begin{cases}<br>+1, if~W_i \gt \triangle \\<br>0, if~|W_i| \le \triangle \\<br>-1, if~W_i \lt -\triangle<br>\end{cases} \tag{3}<br>$$<br>The optimized objective function can be written as:<br>$$<br>\alpha^*, \triangle^* = \arg\min_{\alpha\ge0, \triangle\gt 0}(|I_\triangle|\alpha^2-2(\sum_{i\in I_\triangle}|W_i|)\alpha+c_\triangle) \tag{4}<br>$$<br>where $I_\triangle = {i|~|W|\gt\triangle}$ and $|I_\triangle|$ denotes the number of elements in $I_\triangle$; $c_\triangle = \sum_{i\in I_\triangle^c}W_i^2$ is a $\alpha$-independent constant. Thus the optimal solutions of the objective function can be computed as follows:<br>$$<br>\alpha_\triangle^* = \frac{1}{|I_\triangle|}\sum_{i\in I_\triangle}|W_i| \\<br>\triangle^* = \arg\max_{\triangle\gt 0}(\sum_{i\in I_\triangle}|W_i|^2) \tag{5}<br>$$<br>Here solution of $\triangle$ is approximated by $\triangle^*\approx0.7\cdot E(|W|) \approx \frac{0.7}{n}\sum_{i=1}^n|W_i|$.</p>
+<h2 id="Training-Methods"><a href="#Training-Methods" class="headerlink" title="Training Methods"></a>Training Methods</h2><p>The training of ternary weight networks can be summarized to three steps: quantization, training and updating. Quantization phase is to quantize the weights of convolutional layers using Equation (5), then apply standard forward and backward propagation to the network, and update parameters using standard SGD. <a href="https://github.com/fengfu-chris/caffe-twns" target="_blank" rel="noopener">Source code</a> is available on GitHub.</p>
+<h3 id="Important-Tips"><a href="#Important-Tips" class="headerlink" title="Important Tips"></a>Important Tips</h3><ul>
+<li>$\alpha$ is used as the scaling factor for input $X$ not for weights $W$</li>
+<li>gradient is computed using $W^t$ </li>
+<li>quantized weights are used during forward and backward but not during parameters update, so $W_l^r \gets W_l^r - \eta \frac{\partial C}{\partial W_l^t} $</li>
+<li>first compute $\triangle$ then compute mask, finally compute $\alpha$ </li>
+<li>$\triangle$ is computed with all $|W^r|$ while $\alpha$ is computed only with those $|W^r|&gt;\triangle$</li>
+<li>apply weight-decay would lead results worse </li>
+<li><a href="http://blog.csdn.net/xjtu_noc_wei/article/details/52862282" target="_blank" rel="noopener">this blog</a> is useful for implementation</li>
+</ul>
+<h2 id="Experimental-Results"><a href="#Experimental-Results" class="headerlink" title="Experimental Results"></a>Experimental Results</h2><p>Three data sets are used in this paper, including MNIST, CIFAR-10, ImageNet. To different data sets, the authors conducted experiments using LeNet-5 (32-C5 + MP2 + 64-C5 + MP2 + 512FC + SVM), VGG-inspired network (2$\times$(128-C3) + MP2 + 2$\times$(256-C3) + MP2 + 2$\times$(512-C3) + MP2 + 1024-FC + Softmax), ResNet-18, respectively. Network architecture and parameters setting for different data sets are shown as follows:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MNIST</th>
+<th>CIFAR-10</th>
+<th>ImageNet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>network architecture</td>
+<td>LeNet-5</td>
+<td>VGG-7</td>
+<td>ResNet-18 (B)</td>
+</tr>
+<tr>
+<td>weight decay</td>
+<td>1e-4</td>
+<td>1e-4</td>
+<td>1e-4</td>
+</tr>
+<tr>
+<td>mini-batch size of BN</td>
+<td>50</td>
+<td>100</td>
+<td>64($\times$4 GPUs)</td>
+</tr>
+<tr>
+<td>initial learning rate</td>
+<td>0.01</td>
+<td>0.1</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>learning rate decay (divided by 10) epochs</td>
+<td>15, 25</td>
+<td>80, 120</td>
+<td>30, 40, 50</td>
+</tr>
+<tr>
+<td>momentum</td>
+<td>0.9</td>
+<td>0.9</td>
+<td>0.9</td>
+</tr>
+</tbody>
+</table>
+<p>Comparison of the proposed method and the previous methods are shown as follows:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Method</th>
+<th style="text-align:center">MINIST</th>
+<th style="text-align:center">CIFAR-10</th>
+<th style="text-align:center">ImageNet Top1 (ResNet-18 / ResNet-18B)</th>
+<th style="text-align:center">ImageNet Top5 (ResNet-18 / ResNet-18B)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">TWN</td>
+<td style="text-align:center">99.35</td>
+<td style="text-align:center">92.56</td>
+<td style="text-align:center">61.8 / 65.3</td>
+<td style="text-align:center">84.2 / 86.2</td>
+</tr>
+<tr>
+<td style="text-align:center">BPWN</td>
+<td style="text-align:center">99.05</td>
+<td style="text-align:center">90.18</td>
+<td style="text-align:center">57.5 / 61.6</td>
+<td style="text-align:center">81.2 / 83.9</td>
+</tr>
+<tr>
+<td style="text-align:center">FPWN (full precision)</td>
+<td style="text-align:center">99.41</td>
+<td style="text-align:center">92.88</td>
+<td style="text-align:center">65.4 / 67.6</td>
+<td style="text-align:center">86.76 / 88.0</td>
+</tr>
+<tr>
+<td style="text-align:center">Binary Connect</td>
+<td style="text-align:center">98.82</td>
+<td style="text-align:center">91.73</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">Binarized Neural Networks</td>
+<td style="text-align:center">88.6</td>
+<td style="text-align:center">89.85</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+</tr>
+<tr>
+<td style="text-align:center">Binary Weight Networks</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">60.8</td>
+<td style="text-align:center">83.0</td>
+</tr>
+<tr>
+<td style="text-align:center">XNOR-Net</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">-</td>
+<td style="text-align:center">51.2</td>
+<td style="text-align:center">73.2</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    iceory
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://iceory.com/2018/04/04/ternary-weight-networks/" title="TWN (Ternary Weight Networks)">http://iceory.com/2018/04/04/ternary-weight-networks/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/network-quantization/" rel="tag"># network quantization</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/04/integer-arithmetic-only-inference/" rel="next" title="Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference">
+                <i class="fa fa-chevron-left"></i> Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/trained-ternary-quantization/" rel="prev" title="TTQ (Trained Ternary Quantization)">
+                TTQ (Trained Ternary Quantization) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">iceory</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Training-Methods"><span class="nav-number">1.</span> <span class="nav-text">Training Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Important-Tips"><span class="nav-number">1.1.</span> <span class="nav-text">Important Tips</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experimental-Results"><span class="nav-number">2.</span> <span class="nav-text">Experimental Results</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iceory</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

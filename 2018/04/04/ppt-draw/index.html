@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ppt,figures," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="PPT使用经验 PPT可以做什么？ 展示：海报、汇报等  美工：制作插图（矢量图）  修图：制作表情包等   插件以下的插件都可以在网络上搜索获取，并很方便的插入到PPT里面使用。  PPT美化大师：这个用到的最多。主要使用对齐工具，不过会有广告，如有更好的插件请推荐。  OneKey Tools：一键统一图的大小、特效等。（偶尔用上）  iSlides：一键优化、PPT拼图等。（基本用不上）">
+<meta name="keywords" content="ppt,figures">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ppt draw">
+<meta property="og:url" content="http://iceory.com/2018/04/04/ppt-draw/index.html">
+<meta property="og:site_name" content="iceory&#39;s blog">
+<meta property="og:description" content="PPT使用经验 PPT可以做什么？ 展示：海报、汇报等  美工：制作插图（矢量图）  修图：制作表情包等   插件以下的插件都可以在网络上搜索获取，并很方便的插入到PPT里面使用。  PPT美化大师：这个用到的最多。主要使用对齐工具，不过会有广告，如有更好的插件请推荐。  OneKey Tools：一键统一图的大小、特效等。（偶尔用上）  iSlides：一键优化、PPT拼图等。（基本用不上）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/01.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/02.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/03.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/04.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/05.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/06.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/07.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/08.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/09.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/10.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/11.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/06.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/12.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/13.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/14.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/15.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/16.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/17.png">
+<meta property="og:image" content="http://iceory.com/2018/04/04/ppt-draw/18.png">
+<meta property="og:updated_time" content="2018-04-04T09:06:47.012Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ppt draw">
+<meta name="twitter:description" content="PPT使用经验 PPT可以做什么？ 展示：海报、汇报等  美工：制作插图（矢量图）  修图：制作表情包等   插件以下的插件都可以在网络上搜索获取，并很方便的插入到PPT里面使用。  PPT美化大师：这个用到的最多。主要使用对齐工具，不过会有广告，如有更好的插件请推荐。  OneKey Tools：一键统一图的大小、特效等。（偶尔用上）  iSlides：一键优化、PPT拼图等。（基本用不上）">
+<meta name="twitter:image" content="http://iceory.com/2018/04/04/ppt-draw/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iceory.com/2018/04/04/ppt-draw/"/>
+
+
+
+
+
+  <title>ppt draw | iceory's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iceory's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iceory.com/2018/04/04/ppt-draw/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="iceory">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iceory's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ppt draw</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T16:58:09+08:00">
+                2018-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/绘图笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">绘图笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="PPT使用经验"><a href="#PPT使用经验" class="headerlink" title="PPT使用经验"></a>PPT使用经验</h1><hr>
+<h2 id="PPT可以做什么？"><a href="#PPT可以做什么？" class="headerlink" title="PPT可以做什么？"></a>PPT可以做什么？</h2><ul>
+<li><p>展示：海报、汇报等</p>
+</li>
+<li><p>美工：制作插图（矢量图）</p>
+</li>
+<li><p>修图：制作表情包等</p>
+</li>
+</ul>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>以下的插件都可以在网络上搜索获取，并很方便的插入到PPT里面使用。</p>
+<ol>
+<li><p><strong>PPT美化大师</strong>：这个用到的最多。主要使用对齐工具，不过会有广告，如有更好的插件请推荐。</p>
+</li>
+<li><p>OneKey Tools：一键统一图的大小、特效等。（偶尔用上）</p>
+</li>
+<li><p>iSlides：一键优化、PPT拼图等。（基本用不上）</p>
+</li>
+</ol>
+<h2 id="关于PPT美化大师中广告的问题"><a href="#关于PPT美化大师中广告的问题" class="headerlink" title="关于PPT美化大师中广告的问题"></a>关于PPT美化大师中广告的问题</h2><p>答：在安装目录下寻找 minisite.exe 以及 notify.exe，编辑里面的内容使得这两个程序无效，或者新建一个txt文件，重命名为”minisite.exe”/“notify.exe”，替换掉这两个文件。然后设置文件的权限为只读（不然又会被恢复）。</p>
+<h2 id="画图规范"><a href="#画图规范" class="headerlink" title="画图规范"></a>画图规范</h2><ol>
+<li><p><strong>不要嫌麻烦，尽量做好每个细节</strong>；</p>
+</li>
+<li><p><strong>多练习；参考论文里面画的不错的图来练习</strong>；</p>
+</li>
+<li><p><strong>想清楚图片要表示什么信息</strong>；</p>
+</li>
+<li><p>注意对齐。居中、左对齐、右对齐、等距分布等；可以在视图里面设置网格线方便对齐。</p>
+</li>
+<li><p>线宽一般为1.5~2.0宽度。根据实际需要会有不同的变化；</p>
+</li>
+<li><p>配色采用同种颜色的不同深浅搭配。</p>
+</li>
+</ol>
+<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><ol>
+<li><p>复制：选择对象，CTRL+鼠标拖动</p>
+</li>
+<li><p>全选：CTRL+a</p>
+</li>
+<li><p>格式刷：</p>
+<ul>
+<li>复制格式：CTRL+shift+c</li>
+<li>粘贴格式：CTRL+shift+v</li>
+</ul>
+</li>
+<li><p>取消自动对齐：鼠标操作的基础上，按住alt</p>
+</li>
+<li><p>按比例缩放图形：鼠标操作的基础上，按住CTRL</p>
+</li>
+<li><p>按中心缩放图形：鼠标操作的基础上，CTRL+shift</p>
+</li>
+</ol>
+<p>———————内容分割线———————————-</p>
+<h2 id="简易教程"><a href="#简易教程" class="headerlink" title="简易教程"></a>简易教程</h2><h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><ol>
+<li><p>绘制基本的图形，选择对象并按住ctrl拖动复制</p>
+<p><img src="/2018/04/04/ppt-draw/01.png" alt=""></p>
+</li>
+<li><p>改变线框为1.5，修改线条颜色以及填充颜色</p>
+<p><img src="/2018/04/04/ppt-draw/02.png" alt=""></p>
+<p>效果图：<br> <img src="/2018/04/04/ppt-draw/03.png" alt=""></p>
+</li>
+<li><p>快速改变形状：选择对象，在格式里面选择“编辑对象”，然后选择目标图形</p>
+<p><img src="/2018/04/04/ppt-draw/04.png" alt=""></p>
+<p>效果图：<br> <img src="/2018/04/04/ppt-draw/05.png" alt=""></p>
+</li>
+</ol>
+<h3 id="组合图形"><a href="#组合图形" class="headerlink" title="组合图形"></a>组合图形</h3><ol>
+<li><p>目标图形</p>
+<p><img src="/2018/04/04/ppt-draw/06.png" alt=""></p>
+</li>
+<li><p>图形分析</p>
+<p><img src="/2018/04/04/ppt-draw/07.png" alt=""></p>
+</li>
+<li><p>绘制基本图形</p>
+<p><img src="/2018/04/04/ppt-draw/08.png" alt=""></p>
+</li>
+<li><p>合并图形操作： 选择对象（两个或者以上），在菜单栏“格式”里面选择“合并图形”，选择“拆分”</p>
+<p><img src="/2018/04/04/ppt-draw/09.png" alt=""></p>
+</li>
+<li><p>联合两个半圆还有一个矩形，得到一个圆角矩形（虽然系统已经提供了这个形状，不过是以此为例子而已）</p>
+<p><img src="/2018/04/04/ppt-draw/10.png" alt=""></p>
+</li>
+<li><p>使用矩形对圆角矩形进行分割</p>
+<p><img src="/2018/04/04/ppt-draw/11.png" alt=""></p>
+</li>
+<li><p>继续使用上述操作，得到最终的目标</p>
+<p><img src="/2018/04/04/ppt-draw/06.png" alt=""></p>
+</li>
+</ol>
+<h3 id="曲线绘制"><a href="#曲线绘制" class="headerlink" title="曲线绘制"></a>曲线绘制</h3><ol>
+<li><p>目标图形（接下来以此为参考对象绘制图形）</p>
+<p><img src="/2018/04/04/ppt-draw/12.png" alt=""></p>
+</li>
+<li><p>使用曲线工具进行轮廓绘制，注意这里要绘制成封闭的图形</p>
+<p><img src="/2018/04/04/ppt-draw/13.png" alt=""></p>
+</li>
+<li><p>选中曲线所绘制的轮廓，右键，选择“编辑顶点”</p>
+<p><img src="/2018/04/04/ppt-draw/14.png" alt=""></p>
+</li>
+<li><p>继续调整，得到最终图形</p>
+<p><img src="/2018/04/04/ppt-draw/15.png" alt=""></p>
+</li>
+</ol>
+<h2 id="例子参考"><a href="#例子参考" class="headerlink" title="例子参考"></a>例子参考</h2><p>   <img src="/2018/04/04/ppt-draw/16.png" alt=""></p>
+<p>   <img src="/2018/04/04/ppt-draw/17.png" alt=""></p>
+<p>   <img src="/2018/04/04/ppt-draw/18.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    iceory
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://iceory.com/2018/04/04/ppt-draw/" title="ppt draw">http://iceory.com/2018/04/04/ppt-draw/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ppt/" rel="tag"># ppt</a>
+          
+            <a href="/tags/figures/" rel="tag"># figures</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/04/usage-of-markdown/" rel="next" title="usage of markdown">
+                <i class="fa fa-chevron-left"></i> usage of markdown
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/pyplot/" rel="prev" title="pyplot">
+                pyplot <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">iceory</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PPT使用经验"><span class="nav-number">1.</span> <span class="nav-text">PPT使用经验</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#PPT可以做什么？"><span class="nav-number">1.1.</span> <span class="nav-text">PPT可以做什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插件"><span class="nav-number">1.2.</span> <span class="nav-text">插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于PPT美化大师中广告的问题"><span class="nav-number">1.3.</span> <span class="nav-text">关于PPT美化大师中广告的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#画图规范"><span class="nav-number">1.4.</span> <span class="nav-text">画图规范</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用快捷键"><span class="nav-number">1.5.</span> <span class="nav-text">常用快捷键</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#简易教程"><span class="nav-number">1.6.</span> <span class="nav-text">简易教程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本操作"><span class="nav-number">1.6.1.</span> <span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组合图形"><span class="nav-number">1.6.2.</span> <span class="nav-text">组合图形</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#曲线绘制"><span class="nav-number">1.6.3.</span> <span class="nav-text">曲线绘制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#例子参考"><span class="nav-number">1.7.</span> <span class="nav-text">例子参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iceory</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

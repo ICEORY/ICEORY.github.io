@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="pytorch,gradient,python," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Manual Gradient V.S. Auto Gradient (PyTorch) github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined">
+<meta name="keywords" content="pytorch,gradient,python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="manual vs auto gradient">
+<meta property="og:url" content="http://iceory.com/2018/04/04/manual-vs-auto-gradient/index.html">
+<meta property="og:site_name" content="iceory&#39;s blog">
+<meta property="og:description" content="Manual Gradient V.S. Auto Gradient (PyTorch) github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-04T09:03:21.912Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="manual vs auto gradient">
+<meta name="twitter:description" content="Manual Gradient V.S. Auto Gradient (PyTorch) github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iceory.com/2018/04/04/manual-vs-auto-gradient/"/>
+
+
+
+
+
+  <title>manual vs auto gradient | iceory's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iceory's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iceory.com/2018/04/04/manual-vs-auto-gradient/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="iceory">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iceory's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">manual vs auto gradient</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T16:56:09+08:00">
+                2018-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pytorch/" itemprop="url" rel="index">
+                    <span itemprop="name">pytorch</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Manual-Gradient-V-S-Auto-Gradient-PyTorch"><a href="#Manual-Gradient-V-S-Auto-Gradient-PyTorch" class="headerlink" title="Manual Gradient V.S. Auto Gradient (PyTorch)"></a>Manual Gradient V.S. Auto Gradient (PyTorch)</h1><hr>
+<p>github: <a href="https://github.com/ICEORY/softmax_loss_gradient.git" target="_blank" rel="noopener">https://github.com/ICEORY/softmax_loss_gradient.git</a></p>
+<h2 id="Reproduction-of-Softmax-Loss-with-Cross-Entropy"><a href="#Reproduction-of-Softmax-Loss-with-Cross-Entropy" class="headerlink" title="Reproduction of Softmax Loss with Cross Entropy"></a>Reproduction of Softmax Loss with Cross Entropy</h2><h3 id="softmax-function"><a href="#softmax-function" class="headerlink" title="softmax function"></a>softmax function</h3><p>the softmax function is defined by</p>
+<p>$$<br>y_i = \frac{e^{x_i}}{\sum e^{x_k}}, for~i=1,…, C<br>$$<br>where $x$ is the input with $C$ channels, $y$ is the respected output.</p>
+<p>the gradient of softmax $\frac{\partial y_i}{\partial x_j}$ is computed by:</p>
+<p>$$<br>{\rm if}~i=j,~\frac{\partial y_i}{\partial x_j}=\frac{\partial y_i}{\partial x_i} = \frac{e^{x_j}\cdot \sum e^{x_k}-e^{x_i}\cdot e^{x_i}}{(\sum e^{x_k})^2} = \frac{e^{x_i}}{\sum e^{x_k}}\frac{\sum e^{x_k}-e^{x_i}}{\sum e^{x_k}} = y_i \cdot (1-y_i)<br>$$</p>
+<p>$$<br>{\rm if}~i\ne j,~\frac{\partial y_i}{\partial x_j}=\frac{\partial \frac{e^{x_j}}{\sum e^k}}{\partial x_j} = \frac{0\cdot \sum e^{x_k}-e^{x_i}\cdot e^{x_j}}{(\sum e^{x_k})^2} = -\frac{e^{x_i}}{\sum e^{x_k}} \frac{e^{x_j}}{\sum e^{x_k}} = -y_i \cdot y_j<br>$$</p>
+<h3 id="Cross-entropy-loss"><a href="#Cross-entropy-loss" class="headerlink" title="Cross entropy loss"></a>Cross entropy loss</h3><p>the cross entropy loss function is </p>
+<p>$$<br>\mathcal L = -\sum_{c=1}^C t_c\cdot log(y_c),<br>$$<br>where $t$ is the one-hot label.</p>
+<p>For a batch of samples, the cross-entropy loss can be re-written to</p>
+<p>$$<br>\mathcal L = -\sum_{n=1}^N \sum_{c=1}^C t_{nc} \cdot log(y_{nc})<br>$$</p>
+<p>the gradient of cross entropy loss is computed by</p>
+<p>$$<br>\frac{\partial \mathcal L}{\partial x_i} = -\sum_{c=1}^C \frac{\partial t_c log (y_c)}{\partial x_i} = -\sum_{c=1}^C t_c \frac{\partial log(y_c)}{\partial x_i} = -\sum_{c=1}^C t_c\frac{1}{y_c}\frac{\partial y_c}{\partial x_i} = -\frac{t_i}{y_i}\frac{\partial {y_i}}{\partial x_i}-\sum_{i\ne j}^C \frac{t_j}{y_j}\frac{\partial y_j}{\partial x_i} = -\frac{t_i}{y_i}y_i(1-y_i) - \sum_{i\ne j}^C \frac{\partial t_j}{y_j}(-y_i y_j) = -t_i+t_i y_i + \sum_{i\ne j}^C t_j y_i = -t_i +y_i\sum_i^C t_i = y_i-t_i<br>$$</p>
+<h3 id="Coding-in-PyTorch"><a href="#Coding-in-PyTorch" class="headerlink" title="Coding in PyTorch"></a>Coding in PyTorch</h3><h4 id="Using-basic-function-of-PyTorch"><a href="#Using-basic-function-of-PyTorch" class="headerlink" title="Using basic function of PyTorch"></a>Using basic function of PyTorch</h4><h5 id="forward-propagation-of-SoftMaxLoss"><a href="#forward-propagation-of-SoftMaxLoss" class="headerlink" title="forward propagation of SoftMaxLoss"></a>forward propagation of SoftMaxLoss</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, target)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        forward propagation</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">assert</span> x.dim() == <span class="number">2</span>, <span class="string">"dimension of input should be 2"</span></span><br><span class="line">        exp_x = torch.exp(x)</span><br><span class="line">        y = exp_x / exp_x.sum(<span class="number">1</span>).unsqueeze(<span class="number">1</span>).expand_as(exp_x)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># parameter "target" is a LongTensor and denotes the labels of classes, here we need to convert it into one hot vectors </span></span><br><span class="line">        t = torch.zeros(y.size()).type(y.type())</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> range(t.size(<span class="number">0</span>)):</span><br><span class="line">            t[n][target[n]] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        output = (-t * torch.log(y)).sum() / y.size(<span class="number">0</span>)</span><br><span class="line">        <span class="comment"># output should be a tensor, but the output of sum() is float</span></span><br><span class="line">        output = torch.Tensor([output]).type(y.type())</span><br><span class="line">        self.y = y <span class="comment"># save for backward</span></span><br><span class="line">        self.t = t <span class="comment"># save for backward</span></span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<p>to use the auto-grad scheme of PyTorch, we also define a function to execute the same operation of forward propagation of softmax loss<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SoftmaxLossFunc</span><span class="params">(x, target)</span>:</span></span><br><span class="line">    exp_x = torch.exp(x)</span><br><span class="line">    y = exp_x / exp_x.sum(<span class="number">1</span>).unsqueeze(<span class="number">1</span>).expand_as(exp_x)</span><br><span class="line">    t = torch.zeros(y.size()).type(y.data.type())</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> range(t.size(<span class="number">0</span>)):</span><br><span class="line">        t[n][target.data[n]] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    t = Variable(t)</span><br><span class="line">    output = (-t * torch.log(y)).sum() / y.size(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure></p>
+<h5 id="backward-propagation"><a href="#backward-propagation" class="headerlink" title="backward propagation:"></a>backward propagation:</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad_output)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        backward propagation</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        grad_input = grad_output * (self.y - self.t) / self.y.size(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> grad_input, <span class="keyword">None</span></span><br></pre></td></tr></table></figure>
+<h4 id="testing-code"><a href="#testing-code" class="headerlink" title="testing code:"></a>testing code:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_softmax_loss_backward</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    analyse the difference between autograd and manual grad</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># generate random testing data</span></span><br><span class="line">    x_size = <span class="number">3200</span></span><br><span class="line">    x = torch.randn(x_size, x_size) <span class="comment"># .cuda() # use .cuda for GPU mode</span></span><br><span class="line">    x_var = Variable(x, requires_grad=<span class="keyword">True</span>) <span class="comment"># convert tensor into Variable</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># testing labels</span></span><br><span class="line">    target = torch.LongTensor(range(x_size))</span><br><span class="line">    target_var = Variable(target)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute outputs of softmax loss</span></span><br><span class="line">    y = SoftmaxLoss()(x_var, target_var)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># clone testing data</span></span><br><span class="line">    x_copy = x.clone()</span><br><span class="line">    x_var_copy = Variable(x_copy, requires_grad=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute output of softmax loss</span></span><br><span class="line">    y_hat = SoftmaxLossFunc(x_var_copy, target_var)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute gradient of input data with two different method</span></span><br><span class="line">    y.backward() <span class="comment"># manual gradient</span></span><br><span class="line">    y_hat.backward() <span class="comment"># auto gradient</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># compute difference of gradients</span></span><br><span class="line">    grad_dist = (x_var.grad - x_var_copy.grad).data.abs().sum()</span><br></pre></td></tr></table></figure>
+<p>outputs:</p>
+<p>the distance between our implementation and PyTorch auto-gradient is about e-7 under 32 bits floating point precision, and our backward operation is slightly faster than the baseline</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">=====================================================</span><br><span class="line">|===&gt; testing softmax loss forward</span><br><span class="line">distance between y_hat and y:  0.0</span><br><span class="line">|===&gt; testing softmax loss backward</span><br><span class="line">y:  Variable containing:</span><br><span class="line"> 8.5553</span><br><span class="line">[torch.FloatTensor of size 1]</span><br><span class="line"></span><br><span class="line">y_hat:  Variable containing:</span><br><span class="line"> 8.5553</span><br><span class="line">[torch.FloatTensor of size 1]</span><br><span class="line"></span><br><span class="line">x_grad:  Variable containing:</span><br><span class="line">-3.1247e-04  1.3911e-07  4.8041e-07  ...   3.0512e-08  1.7696e-08  1.0826e-07</span><br><span class="line"> 7.6744e-07 -3.1246e-04  1.2172e-07  ...   1.2465e-07  6.0764e-08  5.0740e-08</span><br><span class="line"> 8.7925e-08  1.7995e-08 -3.1242e-04  ...   1.1499e-07  6.7635e-08  5.2739e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 1.0118e-08  1.7118e-07  1.7081e-07  ...  -3.1244e-04  3.1381e-07  2.1709e-08</span><br><span class="line"> 2.2232e-07  2.4775e-07  1.0417e-07  ...   4.6105e-08 -3.1172e-04  2.1110e-08</span><br><span class="line"> 1.6006e-07  4.8581e-08  3.2675e-08  ...   2.3572e-07  5.3878e-08 -3.1247e-04</span><br><span class="line">[torch.FloatTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">x_copy.grad:  Variable containing:</span><br><span class="line">-3.1247e-04  1.3911e-07  4.8041e-07  ...   3.0512e-08  1.7696e-08  1.0826e-07</span><br><span class="line"> 7.6744e-07 -3.1246e-04  1.2172e-07  ...   1.2465e-07  6.0764e-08  5.0740e-08</span><br><span class="line"> 8.7925e-08  1.7995e-08 -3.1242e-04  ...   1.1499e-07  6.7635e-08  5.2739e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 1.0118e-08  1.7118e-07  1.7081e-07  ...  -3.1244e-04  3.1381e-07  2.1709e-08</span><br><span class="line"> 2.2232e-07  2.4775e-07  1.0417e-07  ...   4.6105e-08 -3.1172e-04  2.1110e-08</span><br><span class="line"> 1.6006e-07  4.8581e-08  3.2675e-08  ...   2.3572e-07  5.3878e-08 -3.1247e-04</span><br><span class="line">[torch.FloatTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">distance between x.grad and x_copy.grad:  1.11203504294e-07</span><br><span class="line">|===&gt; comparing time-costing</span><br><span class="line">time of manual gradient:  1.13225889206</span><br><span class="line">time of auto gradient:  1.40407109261</span><br></pre></td></tr></table></figure>
+<p>with 64 bits double precision, the difference of gradient is reduced into e-16. Notice that the outputs of two sofmaxloss function have a gap of e-7. Again, our method is slightly faster.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">=====================================================</span><br><span class="line">|===&gt; testing softmax loss forward</span><br><span class="line">distance between y_hat and y:  2.31496107617e-07</span><br><span class="line">|===&gt; testing softmax loss backward</span><br><span class="line">y:  Variable containing:</span><br><span class="line"> 8.5468</span><br><span class="line">[torch.DoubleTensor of size 1]</span><br><span class="line"></span><br><span class="line">y_hat:  Variable containing:</span><br><span class="line"> 8.5468</span><br><span class="line">[torch.DoubleTensor of size 1]</span><br><span class="line"></span><br><span class="line">x_grad:  Variable containing:</span><br><span class="line">-3.1246e-04  4.7302e-08  2.6106e-08  ...   2.1885e-08  1.5024e-08  6.0311e-09</span><br><span class="line"> 4.1688e-08 -3.1245e-04  1.1503e-07  ...   1.8215e-07  3.1857e-08  1.1914e-07</span><br><span class="line"> 9.2476e-08  7.1073e-08 -3.1248e-04  ...   2.7795e-08  2.5479e-07  4.8765e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 5.0167e-08  1.2661e-07  8.0579e-08  ...  -3.1239e-04  2.0139e-08  1.3870e-08</span><br><span class="line"> 2.8047e-07  3.2061e-07  1.8310e-08  ...   1.5054e-08 -3.1248e-04  8.4565e-08</span><br><span class="line"> 5.4617e-08  4.3503e-08  5.2926e-08  ...   1.2573e-07  3.3953e-08 -3.1236e-04</span><br><span class="line">[torch.DoubleTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">x_copy.grad:  Variable containing:</span><br><span class="line">-3.1246e-04  4.7302e-08  2.6106e-08  ...   2.1885e-08  1.5024e-08  6.0311e-09</span><br><span class="line"> 4.1688e-08 -3.1245e-04  1.1503e-07  ...   1.8215e-07  3.1857e-08  1.1914e-07</span><br><span class="line"> 9.2476e-08  7.1073e-08 -3.1248e-04  ...   2.7795e-08  2.5479e-07  4.8765e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 5.0167e-08  1.2661e-07  8.0579e-08  ...  -3.1239e-04  2.0139e-08  1.3870e-08</span><br><span class="line"> 2.8047e-07  3.2061e-07  1.8310e-08  ...   1.5054e-08 -3.1248e-04  8.4565e-08</span><br><span class="line"> 5.4617e-08  4.3503e-08  5.2926e-08  ...   1.2573e-07  3.3953e-08 -3.1236e-04</span><br><span class="line">[torch.DoubleTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">distance between x.grad and x_copy.grad:  1.99762357071e-16</span><br><span class="line">|===&gt; comparing time-costing</span><br><span class="line">time of manual gradient:  1.170181036</span><br><span class="line">time of auto gradient:  2.39760398865</span><br></pre></td></tr></table></figure>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h3><p>[1] <a href="http://shuokay.com/2016/07/20/softmax-loss/" target="_blank" rel="noopener">http://shuokay.com/2016/07/20/softmax-loss/</a></p>
+<p>[2] <a href="https://en.wikipedia.org/wiki/Cross_entropy" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Cross_entropy</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    iceory
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://iceory.com/2018/04/04/manual-vs-auto-gradient/" title="manual vs auto gradient">http://iceory.com/2018/04/04/manual-vs-auto-gradient/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/pytorch/" rel="tag"># pytorch</a>
+          
+            <a href="/tags/gradient/" rel="tag"># gradient</a>
+          
+            <a href="/tags/python/" rel="tag"># python</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/04/gitbook/" rel="next" title="gitbook">
+                <i class="fa fa-chevron-left"></i> gitbook
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/usage-of-markdown/" rel="prev" title="usage of markdown">
+                usage of markdown <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">iceory</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Manual-Gradient-V-S-Auto-Gradient-PyTorch"><span class="nav-number">1.</span> <span class="nav-text">Manual Gradient V.S. Auto Gradient (PyTorch)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduction-of-Softmax-Loss-with-Cross-Entropy"><span class="nav-number">1.1.</span> <span class="nav-text">Reproduction of Softmax Loss with Cross Entropy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#softmax-function"><span class="nav-number">1.1.1.</span> <span class="nav-text">softmax function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-entropy-loss"><span class="nav-number">1.1.2.</span> <span class="nav-text">Cross entropy loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coding-in-PyTorch"><span class="nav-number">1.1.3.</span> <span class="nav-text">Coding in PyTorch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Using-basic-function-of-PyTorch"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">Using basic function of PyTorch</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#forward-propagation-of-SoftMaxLoss"><span class="nav-number">1.1.3.1.1.</span> <span class="nav-text">forward propagation of SoftMaxLoss</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#backward-propagation"><span class="nav-number">1.1.3.1.2.</span> <span class="nav-text">backward propagation:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#testing-code"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">testing code:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">1.1.4.</span> <span class="nav-text">Reference:</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iceory</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

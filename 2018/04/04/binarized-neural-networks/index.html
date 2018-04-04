@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="network quantization," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="In this paper, the authors proposed a method to train Binarized Neural Networks (BNNs), a network with binary weights and activations. The proposed BNNs drastically reduce the memory consumption (size">
+<meta name="keywords" content="network quantization">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BNN (Binarized Neural Networks)">
+<meta property="og:url" content="http://iceory.com/2018/04/04/binarized-neural-networks/index.html">
+<meta property="og:site_name" content="iceory&#39;s blog">
+<meta property="og:description" content="In this paper, the authors proposed a method to train Binarized Neural Networks (BNNs), a network with binary weights and activations. The proposed BNNs drastically reduce the memory consumption (size">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-04T08:45:22.402Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BNN (Binarized Neural Networks)">
+<meta name="twitter:description" content="In this paper, the authors proposed a method to train Binarized Neural Networks (BNNs), a network with binary weights and activations. The proposed BNNs drastically reduce the memory consumption (size">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://iceory.com/2018/04/04/binarized-neural-networks/"/>
+
+
+
+
+
+  <title>BNN (Binarized Neural Networks) | iceory's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">iceory's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://iceory.com/2018/04/04/binarized-neural-networks/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="iceory">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="iceory's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">BNN (Binarized Neural Networks)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-04T14:54:08+08:00">
+                2018-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network-quantization/" itemprop="url" rel="index">
+                    <span itemprop="name">network quantization</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>In this paper, the authors proposed a method to train Binarized Neural Networks (BNNs), a network with binary weights and activations. The proposed BNNs drastically reduce the memory consumption (size and number of accesses) and have higher power-efficiency as it replaces most arithmetic operations with bit-wise operations. The code implemented in <a href="https://github.com/MatthieuCourbariaux/BinaryNet" target="_blank" rel="noopener">Theano</a> and <a href="https://github.com/itayhubara/BinaryNet" target="_blank" rel="noopener">Torch</a> is available on GitHub.</p>
+<h2 id="Proposed-Method"><a href="#Proposed-Method" class="headerlink" title="Proposed Method"></a>Proposed Method</h2><h3 id="Binarization-Strategies"><a href="#Binarization-Strategies" class="headerlink" title="Binarization Strategies"></a>Binarization Strategies</h3><p>Constrain both weights and activation to either +1 or -1 has higher efficiency in hardware. The authors discussed two binarization functions including deterministic and stochastic. Formulation of deterministic binarization function is:<br>$$<br>x^b = sign(x)=<br>\begin{cases}<br>+1 &amp; if ~x\ge 0 \\<br>-1 &amp; otherwise,<br>\end{cases}<br>\tag{1}<br>$$</p>
+<a id="more"></a>
+<p>The stochastic binarization function is:</p>
+<p>$$<br>x^b =<br>\begin{cases}<br>+1, &amp; \mathrm{with~probability}~p=\sigma(x) \\<br>-1, &amp; \mathrm{with~probability}~1-p,<br>\end{cases} \tag{2}<br>$$</p>
+<p>where $\sigma$ is the “<em>hard sigmoid</em>“ function:</p>
+<p>$$<br>\sigma(x) = clip(\frac{x+1}{2},0,1) = \max(0,\min(1,\frac{x+1}{2})) \tag{3}<br>$$</p>
+<p>The authors suggested that the stochastic binarization is harder to implement as it requires the hardware to generate random bits, though it is more appealing than the deterministic binarization, so they preferred to use the deterministic binarization function in their experiments.</p>
+<h3 id="Gradient"><a href="#Gradient" class="headerlink" title="Gradient"></a>Gradient</h3><p>Real-valued gradients are computed and accumulated in real-valued variables in this paper, as high precision is required for SGD. Previous work shows that using “straight-through estimator” can help the network training faster, the authors used straight-through estimator of $\frac{\partial C}{\partial r}$ simplified as:<br>$$<br>g_r = g_q1_{|r|\le1} \tag{4}<br>$$<br>which cancels the gradient when $r$ is too large. The derivation $1_{|r|\le1}$ can also be seen as propagating the gradient through <em>hard tanh</em>:<br>$$<br>\mathrm{Htanh}(x)=clip(x,-1,1)=\max(-1,\min(1,x)) \tag{5}<br>$$<br>The real-valued weights $w^r$ first projected to $[-1,+1]$ and then quantized to binarized weights $w^b$ using $w^b=sign(w^r)$. </p>
+<h3 id="Shift-based-Batch-Normalization"><a href="#Shift-based-Batch-Normalization" class="headerlink" title="Shift-based Batch Normalization"></a>Shift-based Batch Normalization</h3><p>The authors proposed a shift-based batch normalization (SBN) to achieve the results of BN so as to speed up computation of batch normalization. The algorithm is shown as follows:<br>$$<br>\mu_B \gets \frac{1}{m}\sum_{i=1}^m x_i \\<br>C(x_i) \gets (x_i-\mu_B) \\<br>\sigma^2_B \gets \frac{1}{m} \sum_{i=1}^m (C(x_i)\ll\gg AP2(C(x_i))) \\<br>\hat{x_i} \gets C(x_i) \ll \gg AP2((\sqrt{\sigma^2_B+\epsilon})^{-1}) \\<br>y_i \gets AP2(\gamma) \ll \gg \hat{x_i} \tag{6}<br>$$<br>Where AP2 is the approximate power-of-2, $\ll\gg$ indicates both left and right binary shift operations.</p>
+<h3 id="Shift-based-AdaMax"><a href="#Shift-based-AdaMax" class="headerlink" title="Shift-based AdaMax"></a>Shift-based AdaMax</h3><p>Since ADAM requires many multiplications, the authors suggested to use shift-based AdaMax which is shown as follows:<br>$$<br>m_t \gets \beta_1 \cdot m_{t-1} + (1-\beta_1) \cdot g_t \\<br>v_t \gets \max(\beta_2 \cdot v_{t-1}, g|t|) \\<br>\theta_t \gets \theta_{t-1} - (\alpha \ll \gg (1-\beta_1)) \cdot \hat{m} \ll \gg v_t^{-1} \tag{7}<br>$$<br>Where $g_t^2$ indicates the element-wise square $g_t\circ g_t$. Good default setting are $\alpha=2^{-10},1-\beta_1=2^{-3},1-\beta_2=2^{-10}$. All operations on vectors are element-wise and $\beta_1^t$$, $\beta_2^t$ denote $\beta_1$ and $\beta_2$ to the power $t$.</p>
+<h3 id="Binarized-Input"><a href="#Binarized-Input" class="headerlink" title="Binarized Input"></a>Binarized Input</h3><p>Since the input representation has much fewer channels than the internal representations in computer vision and it is easy to convert continuous-valued inputs to fixed point numbers, the authors suggested to compute output of first layer by:<br>$$<br>s=x \cdot w^b \\<br>s=\sum_{n=1}^8 2^{n-1}(x^n \cdot w^b) \tag{8}<br>$$<br>where $x$ is a vector of 1024 8-bit inputs, $x_1^8$ is the most significant bit of the first input, $w^b$ is a vector of 1024 1-bit weights and $s$ is the resulting weighted sum.</p>
+<h2 id="Training-Method"><a href="#Training-Method" class="headerlink" title="Training Method"></a>Training Method</h2><p><strong>Step 1, forward:</strong> binarized weights and apply SBN</p>
+<p><strong>Step 2, backward:</strong> compute real-valued gradient $g_a$ with constraint descripted in Equation (4), and compute gradient of weights </p>
+<p><strong>Step 3, update:</strong> update weights with constraint descripted in Equation (4)</p>
+<p><strong>Repeating:</strong> repeating step 1 to step 3, until finish the training.</p>
+<h2 id="Experimental-Results"><a href="#Experimental-Results" class="headerlink" title="Experimental Results"></a>Experimental Results</h2><p>The authors evaluated their method on three data sets including MNIST, SVHN and CIFAR-10, results are shown as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>MNIST</th>
+<th>SVHN</th>
+<th>CIFAR-10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BNN Torch7</td>
+<td>1.40%</td>
+<td>2.53%</td>
+<td>10.15%</td>
+</tr>
+<tr>
+<td>BNN Theano</td>
+<td>0.96%</td>
+<td>2.80%</td>
+<td>11.40%</td>
+</tr>
+</tbody>
+</table>
+<h1 id="Extension-of-BNN"><a href="#Extension-of-BNN" class="headerlink" title="Extension of BNN"></a>Extension of BNN</h1><p>Following the work of BNN, the authors proposed a <a href="https://www.ganghua.org/publication/AAAI17.pdf" target="_blank" rel="noopener">training method</a> to improve performance of BNN in four folds: (1) using low learning rate (the authors suggested to use the learning rate of 1e-4); (2) using PReLU instead of ReLU to absorb the scaling factor for weights to the activation function; (3) introducing a regularization term to the loss function to encourage the weights to be bipolar; (4) using scale layer in fully connected layer to bring the outputs to normal.</p>
+<p>The regularization term introduced in this paper is formulated by:<br>$$<br>J(W,b) = L(W,b)+\lambda \sum_{l=1}^L \sum_{i=1}^{N_l} \sum_{j=1}^{M_l} (1-(W_{l,ij})^2) \tag{9}<br>$$<br>To improve the accuracy, the authors used multiple binarizations for the activation:<br>$$<br>A_l \approx \sum_{i=1}^m (\alpha_{l,i} H{l,i}) \tag{10}<br>$$<br>For $i=1$, $H_{l,1}$ is the sign of $A_l$ and $\alpha_{l,i}$ is the average absolute value of $A_l$, for $i\gt 1$, $H_{l,i}$ and $\alpha_{l,i}$ is calculated in the way based on residual approximation error from step $i-1$: $E_{L,I} = a_l-\sum_{j=1}^{i-1}\alpha_{l,j}\ast H_{l,j}$. So the output $O_l$ is calculated by:<br>$$<br>O_l = W_l \cdot A_{l-1} \approx \sum_{i=1}^m (\alpha_{l-1,i}xnor-popcnt(B_l, H_{l-1,i})) \tag{11}<br>$$</p>
+<h2 id="Experimental-Results-1"><a href="#Experimental-Results-1" class="headerlink" title="Experimental Results"></a>Experimental Results</h2><p>The authors conducted experiments on ImageNet with AlexNet and NIN, the results are shown as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Bits of Activation</th>
+<th>Precision of Last Layer</th>
+<th>Compression Rate</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AlexNet BNN</td>
+<td>1</td>
+<td>Full</td>
+<td>10.3$\times$</td>
+<td>50.4/ 27.9</td>
+</tr>
+<tr>
+<td>AlexNet XNOR-net</td>
+<td>1</td>
+<td>Full</td>
+<td>10.3$\times$</td>
+<td>69.2 / 44.2</td>
+</tr>
+<tr>
+<td>AlexNet DoReFa</td>
+<td>2</td>
+<td>Full</td>
+<td>10.3$\times$</td>
+<td>- / 49.8</td>
+</tr>
+<tr>
+<td>AlexNet Extended-BNN</td>
+<td>2</td>
+<td>Binary</td>
+<td>31.2$\times$</td>
+<td><strong>71.1 / 46.6</strong></td>
+</tr>
+<tr>
+<td>NIN Extended-BNN</td>
+<td>2</td>
+<td>Binary</td>
+<td>23.6 $\times$</td>
+<td><strong>75.6 / 51.4</strong></td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者：</strong>
+    iceory
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://iceory.com/2018/04/04/binarized-neural-networks/" title="BNN (Binarized Neural Networks)">http://iceory.com/2018/04/04/binarized-neural-networks/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>
+    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/network-quantization/" rel="tag"># network quantization</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/04/20171007/" rel="next" title="写于 2017年10月7日">
+                <i class="fa fa-chevron-left"></i> 写于 2017年10月7日
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/04/binary-weight-networks/" rel="prev" title="BWN (Binary Weight Networks) and XNOR-Net">
+                BWN (Binary Weight Networks) and XNOR-Net <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">iceory</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Proposed-Method"><span class="nav-number">1.</span> <span class="nav-text">Proposed Method</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Binarization-Strategies"><span class="nav-number">1.1.</span> <span class="nav-text">Binarization Strategies</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient"><span class="nav-number">1.2.</span> <span class="nav-text">Gradient</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shift-based-Batch-Normalization"><span class="nav-number">1.3.</span> <span class="nav-text">Shift-based Batch Normalization</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shift-based-AdaMax"><span class="nav-number">1.4.</span> <span class="nav-text">Shift-based AdaMax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binarized-Input"><span class="nav-number">1.5.</span> <span class="nav-text">Binarized Input</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Training-Method"><span class="nav-number">2.</span> <span class="nav-text">Training Method</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experimental-Results"><span class="nav-number">3.</span> <span class="nav-text">Experimental Results</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Extension-of-BNN"><span class="nav-number"></span> <span class="nav-text">Extension of BNN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Experimental-Results-1"><span class="nav-number">1.</span> <span class="nav-text">Experimental Results</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">iceory</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
