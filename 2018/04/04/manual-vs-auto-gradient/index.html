@@ -83,18 +83,18 @@
 
 
 
-<meta name="description" content="Manual Gradient V.S. Auto Gradient (PyTorch) github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined">
+<meta name="description" content="github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined by $$y_i = \frac{e^{x_i}}{\sum e^{x_k}}, for~">
 <meta name="keywords" content="pytorch,gradient,python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="manual vs auto gradient">
+<meta property="og:title" content="Manual Gradient V.S. Auto Gradient (PyTorch)">
 <meta property="og:url" content="http://iceory.com/2018/04/04/manual-vs-auto-gradient/index.html">
 <meta property="og:site_name" content="iceory&#39;s blog">
-<meta property="og:description" content="Manual Gradient V.S. Auto Gradient (PyTorch) github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined">
+<meta property="og:description" content="github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined by $$y_i = \frac{e^{x_i}}{\sum e^{x_k}}, for~">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-04-04T09:03:21.912Z">
+<meta property="og:updated_time" content="2018-04-04T09:40:22.404Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="manual vs auto gradient">
-<meta name="twitter:description" content="Manual Gradient V.S. Auto Gradient (PyTorch) github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined">
+<meta name="twitter:title" content="Manual Gradient V.S. Auto Gradient (PyTorch)">
+<meta name="twitter:description" content="github: https://github.com/ICEORY/softmax_loss_gradient.git Reproduction of Softmax Loss with Cross Entropysoftmax functionthe softmax function is defined by $$y_i = \frac{e^{x_i}}{\sum e^{x_k}}, for~">
 
 
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>manual vs auto gradient | iceory's blog</title>
+  <title>Manual Gradient V.S. Auto Gradient (PyTorch) | iceory's blog</title>
   
 
 
@@ -284,7 +284,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">manual vs auto gradient</h1>
+          <h1 class="post-title" itemprop="name headline">Manual Gradient V.S. Auto Gradient (PyTorch)</h1>
         
 
         <div class="post-meta">
@@ -356,19 +356,17 @@
       
 
       
-        <h1 id="Manual-Gradient-V-S-Auto-Gradient-PyTorch"><a href="#Manual-Gradient-V-S-Auto-Gradient-PyTorch" class="headerlink" title="Manual Gradient V.S. Auto Gradient (PyTorch)"></a>Manual Gradient V.S. Auto Gradient (PyTorch)</h1><hr>
-<p>github: <a href="https://github.com/ICEORY/softmax_loss_gradient.git" target="_blank" rel="noopener">https://github.com/ICEORY/softmax_loss_gradient.git</a></p>
+        <p>github: <a href="https://github.com/ICEORY/softmax_loss_gradient.git" target="_blank" rel="noopener">https://github.com/ICEORY/softmax_loss_gradient.git</a></p>
 <h2 id="Reproduction-of-Softmax-Loss-with-Cross-Entropy"><a href="#Reproduction-of-Softmax-Loss-with-Cross-Entropy" class="headerlink" title="Reproduction of Softmax Loss with Cross Entropy"></a>Reproduction of Softmax Loss with Cross Entropy</h2><h3 id="softmax-function"><a href="#softmax-function" class="headerlink" title="softmax function"></a>softmax function</h3><p>the softmax function is defined by</p>
 <p>$$<br>y_i = \frac{e^{x_i}}{\sum e^{x_k}}, for~i=1,…, C<br>$$<br>where $x$ is the input with $C$ channels, $y$ is the respected output.</p>
-<p>the gradient of softmax $\frac{\partial y_i}{\partial x_j}$ is computed by:</p>
-<p>$$<br>{\rm if}~i=j,~\frac{\partial y_i}{\partial x_j}=\frac{\partial y_i}{\partial x_i} = \frac{e^{x_j}\cdot \sum e^{x_k}-e^{x_i}\cdot e^{x_i}}{(\sum e^{x_k})^2} = \frac{e^{x_i}}{\sum e^{x_k}}\frac{\sum e^{x_k}-e^{x_i}}{\sum e^{x_k}} = y_i \cdot (1-y_i)<br>$$</p>
+<p>the gradient of softmax $\frac{\partial y_i}{\partial x_j}$ is computed by:<br><a id="more"></a><br>$$<br>{\rm if}~i=j,~\frac{\partial y_i}{\partial x_j}=\frac{\partial y_i}{\partial x_i} = \frac{e^{x_j}\cdot \sum e^{x_k}-e^{x_i}\cdot e^{x_i}}{(\sum e^{x_k})^2} = \frac{e^{x_i}}{\sum e^{x_k}}\frac{\sum e^{x_k}-e^{x_i}}{\sum e^{x_k}} = y_i \cdot (1-y_i)<br>$$</p>
 <p>$$<br>{\rm if}~i\ne j,~\frac{\partial y_i}{\partial x_j}=\frac{\partial \frac{e^{x_j}}{\sum e^k}}{\partial x_j} = \frac{0\cdot \sum e^{x_k}-e^{x_i}\cdot e^{x_j}}{(\sum e^{x_k})^2} = -\frac{e^{x_i}}{\sum e^{x_k}} \frac{e^{x_j}}{\sum e^{x_k}} = -y_i \cdot y_j<br>$$</p>
 <h3 id="Cross-entropy-loss"><a href="#Cross-entropy-loss" class="headerlink" title="Cross entropy loss"></a>Cross entropy loss</h3><p>the cross entropy loss function is </p>
 <p>$$<br>\mathcal L = -\sum_{c=1}^C t_c\cdot log(y_c),<br>$$<br>where $t$ is the one-hot label.</p>
 <p>For a batch of samples, the cross-entropy loss can be re-written to</p>
 <p>$$<br>\mathcal L = -\sum_{n=1}^N \sum_{c=1}^C t_{nc} \cdot log(y_{nc})<br>$$</p>
 <p>the gradient of cross entropy loss is computed by</p>
-<p>$$<br>\frac{\partial \mathcal L}{\partial x_i} = -\sum_{c=1}^C \frac{\partial t_c log (y_c)}{\partial x_i} = -\sum_{c=1}^C t_c \frac{\partial log(y_c)}{\partial x_i} = -\sum_{c=1}^C t_c\frac{1}{y_c}\frac{\partial y_c}{\partial x_i} = -\frac{t_i}{y_i}\frac{\partial {y_i}}{\partial x_i}-\sum_{i\ne j}^C \frac{t_j}{y_j}\frac{\partial y_j}{\partial x_i} = -\frac{t_i}{y_i}y_i(1-y_i) - \sum_{i\ne j}^C \frac{\partial t_j}{y_j}(-y_i y_j) = -t_i+t_i y_i + \sum_{i\ne j}^C t_j y_i = -t_i +y_i\sum_i^C t_i = y_i-t_i<br>$$</p>
+<p>$$<br>\begin{align}<br>\frac{\partial \mathcal L}{\partial x_i}<br>&amp;= -\sum_{c=1}^C \frac{\partial t_c log (y_c)}{\partial x_i} \\<br>&amp;= -\sum_{c=1}^C t_c \frac{\partial log(y_c)}{\partial x_i} \\<br>&amp;= -\sum_{c=1}^C t_c\frac{1}{y_c}\frac{\partial y_c}{\partial x_i} \\<br>&amp;= -\frac{t_i}{y_i}\frac{\partial {y_i}}{\partial x_i}-\sum_{i\ne j}^C \frac{t_j}{y_j}\frac{\partial y_j}{\partial x_i} \\<br>&amp;= -\frac{t_i}{y_i}y_i(1-y_i) - \sum_{i\ne j}^C \frac{\partial t_j}{y_j}(-y_i y_j) \\<br>&amp;= -t_i+t_i y_i + \sum_{i\ne j}^C t_j y_i \\<br>&amp;= -t_i +y_i\sum_i^C t_i \\<br>&amp;= y_i-t_i<br>\end{align}<br>$$</p>
 <h3 id="Coding-in-PyTorch"><a href="#Coding-in-PyTorch" class="headerlink" title="Coding in PyTorch"></a>Coding in PyTorch</h3><h4 id="Using-basic-function-of-PyTorch"><a href="#Using-basic-function-of-PyTorch" class="headerlink" title="Using basic function of PyTorch"></a>Using basic function of PyTorch</h4><h5 id="forward-propagation-of-SoftMaxLoss"><a href="#forward-propagation-of-SoftMaxLoss" class="headerlink" title="forward propagation of SoftMaxLoss"></a>forward propagation of SoftMaxLoss</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, target)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        forward propagation</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">assert</span> x.dim() == <span class="number">2</span>, <span class="string">"dimension of input should be 2"</span></span><br><span class="line">        exp_x = torch.exp(x)</span><br><span class="line">        y = exp_x / exp_x.sum(<span class="number">1</span>).unsqueeze(<span class="number">1</span>).expand_as(exp_x)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># parameter "target" is a LongTensor and denotes the labels of classes, here we need to convert it into one hot vectors </span></span><br><span class="line">        t = torch.zeros(y.size()).type(y.type())</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> range(t.size(<span class="number">0</span>)):</span><br><span class="line">            t[n][target[n]] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        output = (-t * torch.log(y)).sum() / y.size(<span class="number">0</span>)</span><br><span class="line">        <span class="comment"># output should be a tensor, but the output of sum() is float</span></span><br><span class="line">        output = torch.Tensor([output]).type(y.type())</span><br><span class="line">        self.y = y <span class="comment"># save for backward</span></span><br><span class="line">        self.t = t <span class="comment"># save for backward</span></span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
 <p>to use the auto-grad scheme of PyTorch, we also define a function to execute the same operation of forward propagation of softmax loss<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SoftmaxLossFunc</span><span class="params">(x, target)</span>:</span></span><br><span class="line">    exp_x = torch.exp(x)</span><br><span class="line">    y = exp_x / exp_x.sum(<span class="number">1</span>).unsqueeze(<span class="number">1</span>).expand_as(exp_x)</span><br><span class="line">    t = torch.zeros(y.size()).type(y.data.type())</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> range(t.size(<span class="number">0</span>)):</span><br><span class="line">        t[n][target.data[n]] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    t = Variable(t)</span><br><span class="line">    output = (-t * torch.log(y)).sum() / y.size(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure></p>
 <h5 id="backward-propagation"><a href="#backward-propagation" class="headerlink" title="backward propagation:"></a>backward propagation:</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad_output)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        backward propagation</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        grad_input = grad_output * (self.y - self.t) / self.y.size(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> grad_input, <span class="keyword">None</span></span><br></pre></td></tr></table></figure>
@@ -400,7 +398,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://iceory.com/2018/04/04/manual-vs-auto-gradient/" title="manual vs auto gradient">http://iceory.com/2018/04/04/manual-vs-auto-gradient/</a>
+    <a href="http://iceory.com/2018/04/04/manual-vs-auto-gradient/" title="Manual Gradient V.S. Auto Gradient (PyTorch)">http://iceory.com/2018/04/04/manual-vs-auto-gradient/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>
@@ -432,8 +430,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/04/04/gitbook/" rel="next" title="gitbook">
-                <i class="fa fa-chevron-left"></i> gitbook
+              <a href="/2018/04/04/gitbook/" rel="next" title="gitbook 安装及使用（windows）">
+                <i class="fa fa-chevron-left"></i> gitbook 安装及使用（windows）
               </a>
             
           </div>
@@ -442,8 +440,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/04/04/usage-of-markdown/" rel="prev" title="usage of markdown">
-                usage of markdown <i class="fa fa-chevron-right"></i>
+              <a href="/2018/04/04/usage-of-markdown/" rel="prev" title="markdown 使用教程">
+                markdown 使用教程 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -576,7 +574,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Manual-Gradient-V-S-Auto-Gradient-PyTorch"><span class="nav-number">1.</span> <span class="nav-text">Manual Gradient V.S. Auto Gradient (PyTorch)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduction-of-Softmax-Loss-with-Cross-Entropy"><span class="nav-number">1.1.</span> <span class="nav-text">Reproduction of Softmax Loss with Cross Entropy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#softmax-function"><span class="nav-number">1.1.1.</span> <span class="nav-text">softmax function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-entropy-loss"><span class="nav-number">1.1.2.</span> <span class="nav-text">Cross entropy loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coding-in-PyTorch"><span class="nav-number">1.1.3.</span> <span class="nav-text">Coding in PyTorch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Using-basic-function-of-PyTorch"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">Using basic function of PyTorch</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#forward-propagation-of-SoftMaxLoss"><span class="nav-number">1.1.3.1.1.</span> <span class="nav-text">forward propagation of SoftMaxLoss</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#backward-propagation"><span class="nav-number">1.1.3.1.2.</span> <span class="nav-text">backward propagation:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#testing-code"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">testing code:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">1.1.4.</span> <span class="nav-text">Reference:</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reproduction-of-Softmax-Loss-with-Cross-Entropy"><span class="nav-number">1.</span> <span class="nav-text">Reproduction of Softmax Loss with Cross Entropy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#softmax-function"><span class="nav-number">1.1.</span> <span class="nav-text">softmax function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Cross-entropy-loss"><span class="nav-number">1.2.</span> <span class="nav-text">Cross entropy loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coding-in-PyTorch"><span class="nav-number">1.3.</span> <span class="nav-text">Coding in PyTorch</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Using-basic-function-of-PyTorch"><span class="nav-number">1.3.1.</span> <span class="nav-text">Using basic function of PyTorch</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#forward-propagation-of-SoftMaxLoss"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">forward propagation of SoftMaxLoss</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#backward-propagation"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">backward propagation:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#testing-code"><span class="nav-number">1.3.2.</span> <span class="nav-text">testing code:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">1.4.</span> <span class="nav-text">Reference:</span></a></li></ol></li></ol></div>
             
 
           </div>

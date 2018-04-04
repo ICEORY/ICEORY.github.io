@@ -282,7 +282,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/04/04/pytorch-autogradient/" itemprop="url">pytorch autogradient</a></h1>
+                <a class="post-title-link" href="/2018/04/04/pytorch-autogradient/" itemprop="url">Automatic Differentiation of PyTorch</a></h1>
         
 
         <div class="post-meta">
@@ -355,40 +355,19 @@
 
       
         
-          
-            <h1 id="Automatic-Differentiation-of-PyTorch"><a href="#Automatic-Differentiation-of-PyTorch" class="headerlink" title="Automatic Differentiation of PyTorch"></a>Automatic Differentiation of PyTorch</h1><hr>
-<h2 id="自动求导概述"><a href="#自动求导概述" class="headerlink" title="自动求导概述"></a>自动求导概述</h2><p>参考文献： Automatic Differentiation in Machine Learning: a Survey<br>目前用于求导的方法大致可以分为四类：</p>
+          <h2 id="自动求导概述"><a href="#自动求导概述" class="headerlink" title="自动求导概述"></a>自动求导概述</h2><p>参考文献： Automatic Differentiation in Machine Learning: a Survey<br>目前用于求导的方法大致可以分为四类：</p>
 <ol>
 <li>手动解析并代码实现</li>
 <li>数值求导 (numerical differentiation), 使用有限的微分近似</li>
 <li>符号求导 (symbolic differentiation), 使用代数表达式进行计算</li>
-<li>自动求导 (automatic differentiation, also called algorithmic differentiation)</li>
-</ol>
-<p>自动求导与数值求导、符号求导两者都不同，如果没有详细的了解的话，容易将自动求导归为数值求导。事实上，自动求导只提供一个数值的结果，并不能像符号求导一样提供一个完整的表达式，但它也确实是根据符号求导的规则进行，通过反向追踪表达式的运算过程实现求导。因此，自动求导兼具了数值求导与符号求导两者的特性。</p>
-<p>数值求导的表达式如下：</p>
-<p>$$<br>\frac{\partial f({\bold x})}{\partial x_i} \approx \frac{f(x-h {\bold e}_i)-f({\bold x})}{h},<br>$$<br>其中 ${\bold e}_i$ 是第 $i$ 单位向量，$h \gt 0$ 是一个小的步长。</p>
-<p>符号求导主要根据一系列的求导规则进行变换，例如</p>
-<p>$$<br>\frac{d}{dx}(f(x)+g(x)) \leadsto \frac{d}{dx}f(x) + \frac{d}{dx}g(x)<br>$$</p>
-<p>或</p>
-<p>$$<br>\frac{d}{dx}(f(x)g(x)) \leadsto (\frac{d}{dx}f(x))g(x)+f(x)(\frac{d}{dx}g(x))<br>$$</p>
-<p>从优化的角度，符号求导可以给出问题的内部结构，并用于结果分析。然而，符号求导也容易得到冗长的符号表达式，导致计算困难。</p>
-<h2 id="自动求导"><a href="#自动求导" class="headerlink" title="自动求导"></a>自动求导</h2><p>自动求导依赖于所有的数值计算都是由有限的元操作构成，并且这些元操作的求导是已知的。依据链式法则，可以将所有组成操作的求导过程联系起来，完成整体的求导。自动求导的模式包括：前向模式以及反向模式。</p>
-<p>以 $f(x_1,x_2)={\rm ln}(x_1)+x_1x_2-{\rm sin}(x_2)$ 的求导为例子。其计算过程可以由下图表示。</p>
-<p><img src="/2018/04/04/pytorch-autogradient/AD_01.PNG" alt="AD_flow"></p>
-<p>前向模式求解过程：</p>
-<p><img src="/2018/04/04/pytorch-autogradient/AD_02.PNG" alt="AD_flow"></p>
-<p>反向模式求解过程：</p>
-<p><img src="/2018/04/04/pytorch-autogradient/AD_03.PNG" alt="AD_flow"></p>
-<h2 id="PyTorch-自动求导"><a href="#PyTorch-自动求导" class="headerlink" title="PyTorch 自动求导"></a>PyTorch 自动求导</h2><p>在PyTorch中的自动求导是tape-based autograd，换句话说是基于类似反向模式的自动求导。通过动态的构建运算图，然后反向传播对各个成分进行求导。在PyTorch中，基本的元操作的求导过程已经写好在程序中，如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sinh</span><span class="params">(Function)</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(ctx, i)</span>:</span></span><br><span class="line">        ctx.save_for_backward(i)</span><br><span class="line">        <span class="keyword">return</span> i.sinh()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(ctx, grad_output)</span>:</span></span><br><span class="line">        i, = ctx.saved_variables</span><br><span class="line">        <span class="keyword">return</span> grad_output * i.cosh()</span><br></pre></td></tr></table></figure></p>
-<p>其中Function是一个重要的类，所有元操作或者需要自定义求导过程的操作都从Function类继承，可以记录操作的轨迹并用于自动求导的过程。</p>
-<p>PyTorch动态图构建过程如下图所示：</p>
-<p><img src="/2018/04/04/pytorch-autogradient/fig\dynamic_graph.gif" alt="Dynamic Graph"></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h2><p>[1] <a href="https://justindomke.wordpress.com/2009/03/24/a-simple-explanation-of-reverse-mode-automatic-differentiation/" target="_blank" rel="noopener">https://justindomke.wordpress.com/2009/03/24/a-simple-explanation-of-reverse-mode-automatic-differentiation/</a></p>
-<p>[2] <a href="https://justindomke.wordpress.com/2009/02/17/automatic-differentiation-the-most-criminally-underused-tool-in-the-potential-machine-learning-toolbox/" target="_blank" rel="noopener">https://justindomke.wordpress.com/2009/02/17/automatic-differentiation-the-most-criminally-underused-tool-in-the-potential-machine-learning-toolbox/</a></p>
-<p>[3] python autograd tool: <a href="https://github.com/HIPS/autograd" target="_blank" rel="noopener">https://github.com/HIPS/autograd</a></p>
-<p>[4] <a href="https://github.com/pytorch/pytorch/tree/v0.2.0" target="_blank" rel="noopener">https://github.com/pytorch/pytorch/tree/v0.2.0</a></p>
-
-          
+<li>自动求导 (automatic differentiation, also called algorithmic differentiation)</li></ol>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/04/pytorch-autogradient/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -597,7 +576,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/04/04/ppt-draw/" itemprop="url">ppt draw</a></h1>
+                <a class="post-title-link" href="/2018/04/04/ppt-draw/" itemprop="url">ppt 绘图</a></h1>
         
 
         <div class="post-meta">
@@ -670,114 +649,20 @@
 
       
         
-          
-            <h1 id="PPT使用经验"><a href="#PPT使用经验" class="headerlink" title="PPT使用经验"></a>PPT使用经验</h1><hr>
+          <h1 id="PPT使用经验"><a href="#PPT使用经验" class="headerlink" title="PPT使用经验"></a>PPT使用经验</h1><hr>
 <h2 id="PPT可以做什么？"><a href="#PPT可以做什么？" class="headerlink" title="PPT可以做什么？"></a>PPT可以做什么？</h2><ul>
 <li><p>展示：海报、汇报等</p>
 </li>
 <li><p>美工：制作插图（矢量图）</p>
 </li>
-<li><p>修图：制作表情包等</p>
-</li>
-</ul>
-<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>以下的插件都可以在网络上搜索获取，并很方便的插入到PPT里面使用。</p>
-<ol>
-<li><p><strong>PPT美化大师</strong>：这个用到的最多。主要使用对齐工具，不过会有广告，如有更好的插件请推荐。</p>
-</li>
-<li><p>OneKey Tools：一键统一图的大小、特效等。（偶尔用上）</p>
-</li>
-<li><p>iSlides：一键优化、PPT拼图等。（基本用不上）</p>
-</li>
-</ol>
-<h2 id="关于PPT美化大师中广告的问题"><a href="#关于PPT美化大师中广告的问题" class="headerlink" title="关于PPT美化大师中广告的问题"></a>关于PPT美化大师中广告的问题</h2><p>答：在安装目录下寻找 minisite.exe 以及 notify.exe，编辑里面的内容使得这两个程序无效，或者新建一个txt文件，重命名为”minisite.exe”/“notify.exe”，替换掉这两个文件。然后设置文件的权限为只读（不然又会被恢复）。</p>
-<h2 id="画图规范"><a href="#画图规范" class="headerlink" title="画图规范"></a>画图规范</h2><ol>
-<li><p><strong>不要嫌麻烦，尽量做好每个细节</strong>；</p>
-</li>
-<li><p><strong>多练习；参考论文里面画的不错的图来练习</strong>；</p>
-</li>
-<li><p><strong>想清楚图片要表示什么信息</strong>；</p>
-</li>
-<li><p>注意对齐。居中、左对齐、右对齐、等距分布等；可以在视图里面设置网格线方便对齐。</p>
-</li>
-<li><p>线宽一般为1.5~2.0宽度。根据实际需要会有不同的变化；</p>
-</li>
-<li><p>配色采用同种颜色的不同深浅搭配。</p>
-</li>
-</ol>
-<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><ol>
-<li><p>复制：选择对象，CTRL+鼠标拖动</p>
-</li>
-<li><p>全选：CTRL+a</p>
-</li>
-<li><p>格式刷：</p>
-<ul>
-<li>复制格式：CTRL+shift+c</li>
-<li>粘贴格式：CTRL+shift+v</li>
-</ul>
-</li>
-<li><p>取消自动对齐：鼠标操作的基础上，按住alt</p>
-</li>
-<li><p>按比例缩放图形：鼠标操作的基础上，按住CTRL</p>
-</li>
-<li><p>按中心缩放图形：鼠标操作的基础上，CTRL+shift</p>
-</li>
-</ol>
-<p>———————内容分割线———————————-</p>
-<h2 id="简易教程"><a href="#简易教程" class="headerlink" title="简易教程"></a>简易教程</h2><h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><ol>
-<li><p>绘制基本的图形，选择对象并按住ctrl拖动复制</p>
-<p><img src="/2018/04/04/ppt-draw/01.png" alt=""></p>
-</li>
-<li><p>改变线框为1.5，修改线条颜色以及填充颜色</p>
-<p><img src="/2018/04/04/ppt-draw/02.png" alt=""></p>
-<p>效果图：<br> <img src="/2018/04/04/ppt-draw/03.png" alt=""></p>
-</li>
-<li><p>快速改变形状：选择对象，在格式里面选择“编辑对象”，然后选择目标图形</p>
-<p><img src="/2018/04/04/ppt-draw/04.png" alt=""></p>
-<p>效果图：<br> <img src="/2018/04/04/ppt-draw/05.png" alt=""></p>
-</li>
-</ol>
-<h3 id="组合图形"><a href="#组合图形" class="headerlink" title="组合图形"></a>组合图形</h3><ol>
-<li><p>目标图形</p>
-<p><img src="/2018/04/04/ppt-draw/06.png" alt=""></p>
-</li>
-<li><p>图形分析</p>
-<p><img src="/2018/04/04/ppt-draw/07.png" alt=""></p>
-</li>
-<li><p>绘制基本图形</p>
-<p><img src="/2018/04/04/ppt-draw/08.png" alt=""></p>
-</li>
-<li><p>合并图形操作： 选择对象（两个或者以上），在菜单栏“格式”里面选择“合并图形”，选择“拆分”</p>
-<p><img src="/2018/04/04/ppt-draw/09.png" alt=""></p>
-</li>
-<li><p>联合两个半圆还有一个矩形，得到一个圆角矩形（虽然系统已经提供了这个形状，不过是以此为例子而已）</p>
-<p><img src="/2018/04/04/ppt-draw/10.png" alt=""></p>
-</li>
-<li><p>使用矩形对圆角矩形进行分割</p>
-<p><img src="/2018/04/04/ppt-draw/11.png" alt=""></p>
-</li>
-<li><p>继续使用上述操作，得到最终的目标</p>
-<p><img src="/2018/04/04/ppt-draw/06.png" alt=""></p>
-</li>
-</ol>
-<h3 id="曲线绘制"><a href="#曲线绘制" class="headerlink" title="曲线绘制"></a>曲线绘制</h3><ol>
-<li><p>目标图形（接下来以此为参考对象绘制图形）</p>
-<p><img src="/2018/04/04/ppt-draw/12.png" alt=""></p>
-</li>
-<li><p>使用曲线工具进行轮廓绘制，注意这里要绘制成封闭的图形</p>
-<p><img src="/2018/04/04/ppt-draw/13.png" alt=""></p>
-</li>
-<li><p>选中曲线所绘制的轮廓，右键，选择“编辑顶点”</p>
-<p><img src="/2018/04/04/ppt-draw/14.png" alt=""></p>
-</li>
-<li><p>继续调整，得到最终图形</p>
-<p><img src="/2018/04/04/ppt-draw/15.png" alt=""></p>
-</li>
-</ol>
-<h2 id="例子参考"><a href="#例子参考" class="headerlink" title="例子参考"></a>例子参考</h2><p>   <img src="/2018/04/04/ppt-draw/16.png" alt=""></p>
-<p>   <img src="/2018/04/04/ppt-draw/17.png" alt=""></p>
-<p>   <img src="/2018/04/04/ppt-draw/18.png" alt=""></p>
-
-          
+<li><p>修图：制作表情包等</p></li></ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/04/ppt-draw/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -843,7 +728,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/04/04/usage-of-markdown/" itemprop="url">usage of markdown</a></h1>
+                <a class="post-title-link" href="/2018/04/04/usage-of-markdown/" itemprop="url">markdown 使用教程</a></h1>
         
 
         <div class="post-meta">
@@ -916,58 +801,17 @@
 
       
         
-          
-            <h1 id="markdown"><a href="#markdown" class="headerlink" title="markdown"></a>markdown</h1><hr>
-<h2 id="markdown-基本教程"><a href="#markdown-基本教程" class="headerlink" title="markdown 基本教程"></a>markdown 基本教程</h2><p>参考 [1]：<a href="http://itmyhome.com/markdown/article/extension/task-list.html" target="_blank" rel="noopener">http://itmyhome.com/markdown/article/extension/task-list.html</a></p>
+          <h2 id="markdown-基本教程"><a href="#markdown-基本教程" class="headerlink" title="markdown 基本教程"></a>markdown 基本教程</h2><p>参考 [1]：<a href="http://itmyhome.com/markdown/article/extension/task-list.html" target="_blank" rel="noopener">http://itmyhome.com/markdown/article/extension/task-list.html</a></p>
 <p>主要包括 markdown 的基本语法、扩展语法、编辑器以及扩展、格式转换等方面的内容；</p>
 <h2 id="markdown-mermaid"><a href="#markdown-mermaid" class="headerlink" title="markdown mermaid"></a>markdown mermaid</h2><p>参考 [1] <a href="https://mermaidjs.github.io/flowchart.html" target="_blank" rel="noopener">https://mermaidjs.github.io/flowchart.html</a></p>
 <p>mermaid 是 markdown 中用于画图的工具，基本语法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">start--&gt;stop</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">start--&gt;stop</span><br></pre></td></tr></table></figure>
-<p>其中 graph TD 表示画图的方向，表示方向的语法：</p>
-<ul>
-<li>TB - top bottom</li>
-<li>BT - bottom top</li>
-<li>RL - right left</li>
-<li>LR - left right</li>
-<li>TD - same as TB</li>
-</ul>
-<h3 id="其他基本语法："><a href="#其他基本语法：" class="headerlink" title="其他基本语法："></a>其他基本语法：</h3><h4 id="形状"><a href="#形状" class="headerlink" title="形状"></a>形状</h4><ol>
-<li><p>带文字的节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">id1[this is a node]</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>带圆角的节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">id1(this is a node with round edges)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>圆形的节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">graph LR</span><br><span class="line">id1((this is a circle))</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>不对称形状：id1&gt;This is the text in the box]</p>
-</li>
-<li><p>斜方形：id1{This is the text in the box}</p>
-</li>
-</ol>
-<h4 id="连接方式"><a href="#连接方式" class="headerlink" title="连接方式"></a>连接方式</h4><ol>
-<li><p>实线箭头： A–&gt;B</p>
-</li>
-<li><p>实线连接： A — B</p>
-</li>
-<li><p>带文字连接：<br>A– This is the text —B 或者 A—|This is the text|B</p>
-</li>
-<li><p>带文字箭头连接：</p>
-</li>
-</ol>
-<p>A–&gt;|text|B</p>
-<p>A– text –&gt;B</p>
-<ol start="5">
-<li><p>虚线连接： A-.-&gt;B;</p>
-</li>
-<li><p>粗箭头： A ==&gt; B</p>
-</li>
-</ol>
-<h5 id="子图"><a href="#子图" class="headerlink" title="子图"></a>子图</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">subgraph title</span><br><span class="line">    graph definition</span><br><span class="line">end</span><br></pre></td></tr></table></figure>
-<h2 id="markdown-latex"><a href="#markdown-latex" class="headerlink" title="markdown latex"></a>markdown latex</h2><p>[1] <a href="https://www.zybuluo.com/fyywy520/note/82980" target="_blank" rel="noopener">https://www.zybuluo.com/fyywy520/note/82980</a></p>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/04/usage-of-markdown/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1033,7 +877,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/04/04/manual-vs-auto-gradient/" itemprop="url">manual vs auto gradient</a></h1>
+                <a class="post-title-link" href="/2018/04/04/manual-vs-auto-gradient/" itemprop="url">Manual Gradient V.S. Auto Gradient (PyTorch)</a></h1>
         
 
         <div class="post-meta">
@@ -1106,33 +950,17 @@
 
       
         
-          
-            <h1 id="Manual-Gradient-V-S-Auto-Gradient-PyTorch"><a href="#Manual-Gradient-V-S-Auto-Gradient-PyTorch" class="headerlink" title="Manual Gradient V.S. Auto Gradient (PyTorch)"></a>Manual Gradient V.S. Auto Gradient (PyTorch)</h1><hr>
-<p>github: <a href="https://github.com/ICEORY/softmax_loss_gradient.git" target="_blank" rel="noopener">https://github.com/ICEORY/softmax_loss_gradient.git</a></p>
+          <p>github: <a href="https://github.com/ICEORY/softmax_loss_gradient.git" target="_blank" rel="noopener">https://github.com/ICEORY/softmax_loss_gradient.git</a></p>
 <h2 id="Reproduction-of-Softmax-Loss-with-Cross-Entropy"><a href="#Reproduction-of-Softmax-Loss-with-Cross-Entropy" class="headerlink" title="Reproduction of Softmax Loss with Cross Entropy"></a>Reproduction of Softmax Loss with Cross Entropy</h2><h3 id="softmax-function"><a href="#softmax-function" class="headerlink" title="softmax function"></a>softmax function</h3><p>the softmax function is defined by</p>
 <p>$$<br>y_i = \frac{e^{x_i}}{\sum e^{x_k}}, for~i=1,…, C<br>$$<br>where $x$ is the input with $C$ channels, $y$ is the respected output.</p>
-<p>the gradient of softmax $\frac{\partial y_i}{\partial x_j}$ is computed by:</p>
-<p>$$<br>{\rm if}~i=j,~\frac{\partial y_i}{\partial x_j}=\frac{\partial y_i}{\partial x_i} = \frac{e^{x_j}\cdot \sum e^{x_k}-e^{x_i}\cdot e^{x_i}}{(\sum e^{x_k})^2} = \frac{e^{x_i}}{\sum e^{x_k}}\frac{\sum e^{x_k}-e^{x_i}}{\sum e^{x_k}} = y_i \cdot (1-y_i)<br>$$</p>
-<p>$$<br>{\rm if}~i\ne j,~\frac{\partial y_i}{\partial x_j}=\frac{\partial \frac{e^{x_j}}{\sum e^k}}{\partial x_j} = \frac{0\cdot \sum e^{x_k}-e^{x_i}\cdot e^{x_j}}{(\sum e^{x_k})^2} = -\frac{e^{x_i}}{\sum e^{x_k}} \frac{e^{x_j}}{\sum e^{x_k}} = -y_i \cdot y_j<br>$$</p>
-<h3 id="Cross-entropy-loss"><a href="#Cross-entropy-loss" class="headerlink" title="Cross entropy loss"></a>Cross entropy loss</h3><p>the cross entropy loss function is </p>
-<p>$$<br>\mathcal L = -\sum_{c=1}^C t_c\cdot log(y_c),<br>$$<br>where $t$ is the one-hot label.</p>
-<p>For a batch of samples, the cross-entropy loss can be re-written to</p>
-<p>$$<br>\mathcal L = -\sum_{n=1}^N \sum_{c=1}^C t_{nc} \cdot log(y_{nc})<br>$$</p>
-<p>the gradient of cross entropy loss is computed by</p>
-<p>$$<br>\frac{\partial \mathcal L}{\partial x_i} = -\sum_{c=1}^C \frac{\partial t_c log (y_c)}{\partial x_i} = -\sum_{c=1}^C t_c \frac{\partial log(y_c)}{\partial x_i} = -\sum_{c=1}^C t_c\frac{1}{y_c}\frac{\partial y_c}{\partial x_i} = -\frac{t_i}{y_i}\frac{\partial {y_i}}{\partial x_i}-\sum_{i\ne j}^C \frac{t_j}{y_j}\frac{\partial y_j}{\partial x_i} = -\frac{t_i}{y_i}y_i(1-y_i) - \sum_{i\ne j}^C \frac{\partial t_j}{y_j}(-y_i y_j) = -t_i+t_i y_i + \sum_{i\ne j}^C t_j y_i = -t_i +y_i\sum_i^C t_i = y_i-t_i<br>$$</p>
-<h3 id="Coding-in-PyTorch"><a href="#Coding-in-PyTorch" class="headerlink" title="Coding in PyTorch"></a>Coding in PyTorch</h3><h4 id="Using-basic-function-of-PyTorch"><a href="#Using-basic-function-of-PyTorch" class="headerlink" title="Using basic function of PyTorch"></a>Using basic function of PyTorch</h4><h5 id="forward-propagation-of-SoftMaxLoss"><a href="#forward-propagation-of-SoftMaxLoss" class="headerlink" title="forward propagation of SoftMaxLoss"></a>forward propagation of SoftMaxLoss</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, target)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        forward propagation</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        <span class="keyword">assert</span> x.dim() == <span class="number">2</span>, <span class="string">"dimension of input should be 2"</span></span><br><span class="line">        exp_x = torch.exp(x)</span><br><span class="line">        y = exp_x / exp_x.sum(<span class="number">1</span>).unsqueeze(<span class="number">1</span>).expand_as(exp_x)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># parameter "target" is a LongTensor and denotes the labels of classes, here we need to convert it into one hot vectors </span></span><br><span class="line">        t = torch.zeros(y.size()).type(y.type())</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> range(t.size(<span class="number">0</span>)):</span><br><span class="line">            t[n][target[n]] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        output = (-t * torch.log(y)).sum() / y.size(<span class="number">0</span>)</span><br><span class="line">        <span class="comment"># output should be a tensor, but the output of sum() is float</span></span><br><span class="line">        output = torch.Tensor([output]).type(y.type())</span><br><span class="line">        self.y = y <span class="comment"># save for backward</span></span><br><span class="line">        self.t = t <span class="comment"># save for backward</span></span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
-<p>to use the auto-grad scheme of PyTorch, we also define a function to execute the same operation of forward propagation of softmax loss<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">SoftmaxLossFunc</span><span class="params">(x, target)</span>:</span></span><br><span class="line">    exp_x = torch.exp(x)</span><br><span class="line">    y = exp_x / exp_x.sum(<span class="number">1</span>).unsqueeze(<span class="number">1</span>).expand_as(exp_x)</span><br><span class="line">    t = torch.zeros(y.size()).type(y.data.type())</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> range(t.size(<span class="number">0</span>)):</span><br><span class="line">        t[n][target.data[n]] = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    t = Variable(t)</span><br><span class="line">    output = (-t * torch.log(y)).sum() / y.size(<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure></p>
-<h5 id="backward-propagation"><a href="#backward-propagation" class="headerlink" title="backward propagation:"></a>backward propagation:</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(self, grad_output)</span>:</span></span><br><span class="line">        <span class="string">"""</span></span><br><span class="line"><span class="string">        backward propagation</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        grad_input = grad_output * (self.y - self.t) / self.y.size(<span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> grad_input, <span class="keyword">None</span></span><br></pre></td></tr></table></figure>
-<h4 id="testing-code"><a href="#testing-code" class="headerlink" title="testing code:"></a>testing code:</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_softmax_loss_backward</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    analyse the difference between autograd and manual grad</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    <span class="comment"># generate random testing data</span></span><br><span class="line">    x_size = <span class="number">3200</span></span><br><span class="line">    x = torch.randn(x_size, x_size) <span class="comment"># .cuda() # use .cuda for GPU mode</span></span><br><span class="line">    x_var = Variable(x, requires_grad=<span class="keyword">True</span>) <span class="comment"># convert tensor into Variable</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># testing labels</span></span><br><span class="line">    target = torch.LongTensor(range(x_size))</span><br><span class="line">    target_var = Variable(target)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute outputs of softmax loss</span></span><br><span class="line">    y = SoftmaxLoss()(x_var, target_var)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># clone testing data</span></span><br><span class="line">    x_copy = x.clone()</span><br><span class="line">    x_var_copy = Variable(x_copy, requires_grad=<span class="keyword">True</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute output of softmax loss</span></span><br><span class="line">    y_hat = SoftmaxLossFunc(x_var_copy, target_var)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># compute gradient of input data with two different method</span></span><br><span class="line">    y.backward() <span class="comment"># manual gradient</span></span><br><span class="line">    y_hat.backward() <span class="comment"># auto gradient</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># compute difference of gradients</span></span><br><span class="line">    grad_dist = (x_var.grad - x_var_copy.grad).data.abs().sum()</span><br></pre></td></tr></table></figure>
-<p>outputs:</p>
-<p>the distance between our implementation and PyTorch auto-gradient is about e-7 under 32 bits floating point precision, and our backward operation is slightly faster than the baseline</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">=====================================================</span><br><span class="line">|===&gt; testing softmax loss forward</span><br><span class="line">distance between y_hat and y:  0.0</span><br><span class="line">|===&gt; testing softmax loss backward</span><br><span class="line">y:  Variable containing:</span><br><span class="line"> 8.5553</span><br><span class="line">[torch.FloatTensor of size 1]</span><br><span class="line"></span><br><span class="line">y_hat:  Variable containing:</span><br><span class="line"> 8.5553</span><br><span class="line">[torch.FloatTensor of size 1]</span><br><span class="line"></span><br><span class="line">x_grad:  Variable containing:</span><br><span class="line">-3.1247e-04  1.3911e-07  4.8041e-07  ...   3.0512e-08  1.7696e-08  1.0826e-07</span><br><span class="line"> 7.6744e-07 -3.1246e-04  1.2172e-07  ...   1.2465e-07  6.0764e-08  5.0740e-08</span><br><span class="line"> 8.7925e-08  1.7995e-08 -3.1242e-04  ...   1.1499e-07  6.7635e-08  5.2739e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 1.0118e-08  1.7118e-07  1.7081e-07  ...  -3.1244e-04  3.1381e-07  2.1709e-08</span><br><span class="line"> 2.2232e-07  2.4775e-07  1.0417e-07  ...   4.6105e-08 -3.1172e-04  2.1110e-08</span><br><span class="line"> 1.6006e-07  4.8581e-08  3.2675e-08  ...   2.3572e-07  5.3878e-08 -3.1247e-04</span><br><span class="line">[torch.FloatTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">x_copy.grad:  Variable containing:</span><br><span class="line">-3.1247e-04  1.3911e-07  4.8041e-07  ...   3.0512e-08  1.7696e-08  1.0826e-07</span><br><span class="line"> 7.6744e-07 -3.1246e-04  1.2172e-07  ...   1.2465e-07  6.0764e-08  5.0740e-08</span><br><span class="line"> 8.7925e-08  1.7995e-08 -3.1242e-04  ...   1.1499e-07  6.7635e-08  5.2739e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 1.0118e-08  1.7118e-07  1.7081e-07  ...  -3.1244e-04  3.1381e-07  2.1709e-08</span><br><span class="line"> 2.2232e-07  2.4775e-07  1.0417e-07  ...   4.6105e-08 -3.1172e-04  2.1110e-08</span><br><span class="line"> 1.6006e-07  4.8581e-08  3.2675e-08  ...   2.3572e-07  5.3878e-08 -3.1247e-04</span><br><span class="line">[torch.FloatTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">distance between x.grad and x_copy.grad:  1.11203504294e-07</span><br><span class="line">|===&gt; comparing time-costing</span><br><span class="line">time of manual gradient:  1.13225889206</span><br><span class="line">time of auto gradient:  1.40407109261</span><br></pre></td></tr></table></figure>
-<p>with 64 bits double precision, the difference of gradient is reduced into e-16. Notice that the outputs of two sofmaxloss function have a gap of e-7. Again, our method is slightly faster.</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">=====================================================</span><br><span class="line">|===&gt; testing softmax loss forward</span><br><span class="line">distance between y_hat and y:  2.31496107617e-07</span><br><span class="line">|===&gt; testing softmax loss backward</span><br><span class="line">y:  Variable containing:</span><br><span class="line"> 8.5468</span><br><span class="line">[torch.DoubleTensor of size 1]</span><br><span class="line"></span><br><span class="line">y_hat:  Variable containing:</span><br><span class="line"> 8.5468</span><br><span class="line">[torch.DoubleTensor of size 1]</span><br><span class="line"></span><br><span class="line">x_grad:  Variable containing:</span><br><span class="line">-3.1246e-04  4.7302e-08  2.6106e-08  ...   2.1885e-08  1.5024e-08  6.0311e-09</span><br><span class="line"> 4.1688e-08 -3.1245e-04  1.1503e-07  ...   1.8215e-07  3.1857e-08  1.1914e-07</span><br><span class="line"> 9.2476e-08  7.1073e-08 -3.1248e-04  ...   2.7795e-08  2.5479e-07  4.8765e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 5.0167e-08  1.2661e-07  8.0579e-08  ...  -3.1239e-04  2.0139e-08  1.3870e-08</span><br><span class="line"> 2.8047e-07  3.2061e-07  1.8310e-08  ...   1.5054e-08 -3.1248e-04  8.4565e-08</span><br><span class="line"> 5.4617e-08  4.3503e-08  5.2926e-08  ...   1.2573e-07  3.3953e-08 -3.1236e-04</span><br><span class="line">[torch.DoubleTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">x_copy.grad:  Variable containing:</span><br><span class="line">-3.1246e-04  4.7302e-08  2.6106e-08  ...   2.1885e-08  1.5024e-08  6.0311e-09</span><br><span class="line"> 4.1688e-08 -3.1245e-04  1.1503e-07  ...   1.8215e-07  3.1857e-08  1.1914e-07</span><br><span class="line"> 9.2476e-08  7.1073e-08 -3.1248e-04  ...   2.7795e-08  2.5479e-07  4.8765e-08</span><br><span class="line">                ...                   ⋱                   ...                </span><br><span class="line"> 5.0167e-08  1.2661e-07  8.0579e-08  ...  -3.1239e-04  2.0139e-08  1.3870e-08</span><br><span class="line"> 2.8047e-07  3.2061e-07  1.8310e-08  ...   1.5054e-08 -3.1248e-04  8.4565e-08</span><br><span class="line"> 5.4617e-08  4.3503e-08  5.2926e-08  ...   1.2573e-07  3.3953e-08 -3.1236e-04</span><br><span class="line">[torch.DoubleTensor of size 3200x3200]</span><br><span class="line"></span><br><span class="line">distance between x.grad and x_copy.grad:  1.99762357071e-16</span><br><span class="line">|===&gt; comparing time-costing</span><br><span class="line">time of manual gradient:  1.170181036</span><br><span class="line">time of auto gradient:  2.39760398865</span><br></pre></td></tr></table></figure>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h3><p>[1] <a href="http://shuokay.com/2016/07/20/softmax-loss/" target="_blank" rel="noopener">http://shuokay.com/2016/07/20/softmax-loss/</a></p>
-<p>[2] <a href="https://en.wikipedia.org/wiki/Cross_entropy" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Cross_entropy</a></p>
-
-          
+<p>the gradient of softmax $\frac{\partial y_i}{\partial x_j}$ is computed by:<br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/04/manual-vs-auto-gradient/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1198,7 +1026,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/04/04/gitbook/" itemprop="url">gitbook</a></h1>
+                <a class="post-title-link" href="/2018/04/04/gitbook/" itemprop="url">gitbook 安装及使用（windows）</a></h1>
         
 
         <div class="post-meta">
@@ -1271,34 +1099,15 @@
 
       
         
-          
-            <h1 id="gitbook-安装及使用（windows）参考"><a href="#gitbook-安装及使用（windows）参考" class="headerlink" title="gitbook 安装及使用（windows）参考"></a>gitbook 安装及使用（windows）<a href="https://yuzeshan.gitbooks.io/gitbook-studying/content/index.html" target="_blank" rel="noopener">参考</a></h1><h2 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h2><p>直接到官网下载exe安装即可，<a href="https://blog.gtwang.org/web-development/install-node-js-in-windows-mac-os-x-linux/" target="_blank" rel="noopener">参考网站</a></p>
-<h2 id="使用npm安装gitbook"><a href="#使用npm安装gitbook" class="headerlink" title="使用npm安装gitbook"></a>使用npm安装gitbook</h2><p><strong>注意</strong>：不知道什么原因，gitbook命令只能在nodejs的终端中使用，在系统的cmd或者powershell中不被识别</p>
-<p>npm install gitbook-cli -g</p>
-<p>在node.js command prompt 中使用 gitbook -V 确认安装成功</p>
-<h2 id="gitbook使用"><a href="#gitbook使用" class="headerlink" title="gitbook使用"></a>gitbook使用</h2><p>打开node.js command prompt</p>
-<p>运行gitbook</p>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p>本地预览： gitbook serve ./book_name</p>
-<p>输出静态网站： gitbook build ./book_path ./output_path</p>
-<p>查看帮助： gitbook help</p>
-<h2 id="构建github-blog"><a href="#构建github-blog" class="headerlink" title="构建github blog"></a>构建github blog</h2><p><strong>注意</strong>： 仓库名称必须为usename.github.io，注意大小写，跟官方教程有点不一样，这个后期再弄。<a href="https://yuzeshan.gitbooks.io/gitbook-studying/content/publish/gitpages.html" target="_blank" rel="noopener">参考</a></p>
-<ol>
-<li>创建github远程仓库</li>
-<li>克隆仓库到本地： git clone ….</li>
-<li>创建一个新的分支 git checkout -b gh-pages(分支名必须为gh-pages)</li>
-<li>将分支push到仓库</li>
-<li>切换到主分支master</li>
-<li>将gitbook build得到的静态网页文件复制到改仓库的本地目录下</li>
-<li>提交到远程仓库</li>
-<li>打开<a href="http://username.github.io可以看到网页版本的gitbook" target="_blank" rel="noopener">http://username.github.io可以看到网页版本的gitbook</a></li>
-</ol>
-<h2 id="gitbook-插件"><a href="#gitbook-插件" class="headerlink" title="gitbook 插件"></a>gitbook 插件</h2><h3 id="支持中文搜索的search-pro"><a href="#支持中文搜索的search-pro" class="headerlink" title="支持中文搜索的search-pro"></a>支持中文搜索的search-pro</h3><p>github: <a href="https://github.com/gitbook-plugins/gitbook-plugin-search-pro" target="_blank" rel="noopener">https://github.com/gitbook-plugins/gitbook-plugin-search-pro</a></p>
-<p>在终端运行命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install gitbook-plugin-search-pro</span><br></pre></td></tr></table></figure></p>
-<p>修改book.json:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;plugins&quot;: [</span><br><span class="line">      &quot;-lunr&quot;, &quot;-search&quot;, &quot;search-pro&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="gitbook-editor"><a href="#gitbook-editor" class="headerlink" title="gitbook editor"></a>gitbook editor</h2><h3 id="如何切换预览模式？"><a href="#如何切换预览模式？" class="headerlink" title="如何切换预览模式？"></a>如何切换预览模式？</h3><p>新版的gitbook editor将预览模式的切换收入了右下角的“？”那里，选择“Edit Markdown”即可切换。</p>
-<p>参考链接： <a href="https://www.zhihu.com/question/56703698/answer/150102664" target="_blank" rel="noopener">https://www.zhihu.com/question/56703698/answer/150102664</a></p>
-
-          
+          <h2 id="reference-https-yuzeshan-gitbooks-io-gitbook-studying-content-index-html"><a href="#reference-https-yuzeshan-gitbooks-io-gitbook-studying-content-index-html" class="headerlink" title="reference: https://yuzeshan.gitbooks.io/gitbook-studying/content/index.html"></a>reference: <a href="https://yuzeshan.gitbooks.io/gitbook-studying/content/index.html" target="_blank" rel="noopener">https://yuzeshan.gitbooks.io/gitbook-studying/content/index.html</a></h2><h2 id="安装node-js"><a href="#安装node-js" class="headerlink" title="安装node.js"></a>安装node.js</h2><p>直接到官网下载exe安装即可，<a href="https://blog.gtwang.org/web-development/install-node-js-in-windows-mac-os-x-linux/" target="_blank" rel="noopener">参考网站</a></p>
+<h2 id="使用npm安装gitbook"><a href="#使用npm安装gitbook" class="headerlink" title="使用npm安装gitbook"></a>使用npm安装gitbook</h2><p><strong>注意</strong>：不知道什么原因，gitbook命令只能在nodejs的终端中使用，在系统的cmd或者powershell中不被识别<br></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/04/gitbook/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
