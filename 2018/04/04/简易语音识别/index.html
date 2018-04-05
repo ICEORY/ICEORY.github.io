@@ -91,22 +91,22 @@
 <meta property="og:site_name" content="iceory&#39;s blog">
 <meta property="og:description" content="GitHub地址：https://github.com/ICEORY/SpeechRecognition 摘要本系统以MFC上位机系统作为程序控制的中部枢纽，通过VC自带的MSComm控件与单片机进行单向通信，将采集到的数据在人机界面上显示，同时将数据保存到MATLAB的mat数据文件中。在离线工作模式下自动调用MATLAB函数对数据进行滤波以及时频空间上的转换，并将处理结果以绘图形式呈现。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/mcu_program_structure.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/mfc_structure.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/online_mode_program_pipeline.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/test_mode_program_pipeline.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/test_mode_sub_window_program.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/matlab_data_processing.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/main_window.jpg">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/test_mode_sub_window.jpg">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/main_window_draw_curves.jpg">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/data_processing_result.jpg">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/vs_setting.jpg">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/mcu_program_structure.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/mfc_structure.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/online_mode_program_pipeline.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/test_mode_program_pipeline.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/test_mode_sub_window_program.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/matlab_data_processing.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/main_window.jpg">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/test_mode_sub_window.jpg">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/main_window_draw_curves.jpg">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/data_processing_result.jpg">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/vs_setting.jpg">
 <meta property="og:updated_time" content="2018-04-04T08:48:15.843Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于MFC与MATLAB混合编程的语音识别系统设计">
 <meta name="twitter:description" content="GitHub地址：https://github.com/ICEORY/SpeechRecognition 摘要本系统以MFC上位机系统作为程序控制的中部枢纽，通过VC自带的MSComm控件与单片机进行单向通信，将采集到的数据在人机界面上显示，同时将数据保存到MATLAB的mat数据文件中。在离线工作模式下自动调用MATLAB函数对数据进行滤波以及时频空间上的转换，并将处理结果以绘图形式呈现。">
-<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/简易语音识别/mcu_program_structure.png">
+<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/简易语音识别/简易语音识别/mcu_program_structure.png">
 
 
 
@@ -407,18 +407,18 @@
 <li>基于MATLAB m文件的语音数据处理算法。</li>
 </ol>
 <p>其中单片机与MFC之间利用MSComm控件进行单向通信，即单片机采集到的数据单方向发送到MFC的缓存区。而MFC与MATLAB程序之间通过matlab engine进行函数的调用，从而实现混合编程。最终实现采集环境声音并在离线模式下进行数据处理显示的功能。</p>
-<h2 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h2><h3 id="单片机程序结构"><a href="#单片机程序结构" class="headerlink" title="单片机程序结构"></a>单片机程序结构</h3><p><img src="/2018/04/04/简易语音识别/mcu_program_structure.png" alt="mcu_program_structure"></p>
-<h3 id="MFC上位机系统结构"><a href="#MFC上位机系统结构" class="headerlink" title="MFC上位机系统结构"></a>MFC上位机系统结构</h3><p><img src="/2018/04/04/简易语音识别/mfc_structure.png" alt="mfc_structure"></p>
-<h3 id="在线模式下的程序结构"><a href="#在线模式下的程序结构" class="headerlink" title="在线模式下的程序结构"></a>在线模式下的程序结构</h3><p><img src="/2018/04/04/简易语音识别/online_mode_program_pipeline.png" alt="online_mode_program_pipeline"></p>
-<h3 id="测试模式下程序结构"><a href="#测试模式下程序结构" class="headerlink" title="测试模式下程序结构"></a>测试模式下程序结构</h3><p><img src="/2018/04/04/简易语音识别/test_mode_program_pipeline.png" alt="test_mode_program_pipeline"></p>
-<h3 id="测试模式下子窗口程序"><a href="#测试模式下子窗口程序" class="headerlink" title="测试模式下子窗口程序"></a>测试模式下子窗口程序</h3><p><img src="/2018/04/04/简易语音识别/test_mode_sub_window_program.png" alt="test_mode_sub_window_program"></p>
-<h3 id="MATLAB数据处理结构"><a href="#MATLAB数据处理结构" class="headerlink" title="MATLAB数据处理结构"></a>MATLAB数据处理结构</h3><p><img src="/2018/04/04/简易语音识别/matlab_data_processing.png" alt="matlab_data_processing"></p>
+<h2 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h2><h3 id="单片机程序结构"><a href="#单片机程序结构" class="headerlink" title="单片机程序结构"></a>单片机程序结构</h3><p><img src="简易语音识别/mcu_program_structure.png" alt="mcu_program_structure"></p>
+<h3 id="MFC上位机系统结构"><a href="#MFC上位机系统结构" class="headerlink" title="MFC上位机系统结构"></a>MFC上位机系统结构</h3><p><img src="简易语音识别/mfc_structure.png" alt="mfc_structure"></p>
+<h3 id="在线模式下的程序结构"><a href="#在线模式下的程序结构" class="headerlink" title="在线模式下的程序结构"></a>在线模式下的程序结构</h3><p><img src="简易语音识别/online_mode_program_pipeline.png" alt="online_mode_program_pipeline"></p>
+<h3 id="测试模式下程序结构"><a href="#测试模式下程序结构" class="headerlink" title="测试模式下程序结构"></a>测试模式下程序结构</h3><p><img src="简易语音识别/test_mode_program_pipeline.png" alt="test_mode_program_pipeline"></p>
+<h3 id="测试模式下子窗口程序"><a href="#测试模式下子窗口程序" class="headerlink" title="测试模式下子窗口程序"></a>测试模式下子窗口程序</h3><p><img src="简易语音识别/test_mode_sub_window_program.png" alt="test_mode_sub_window_program"></p>
+<h3 id="MATLAB数据处理结构"><a href="#MATLAB数据处理结构" class="headerlink" title="MATLAB数据处理结构"></a>MATLAB数据处理结构</h3><p><img src="简易语音识别/matlab_data_processing.png" alt="matlab_data_processing"></p>
 <h2 id="界面设计"><a href="#界面设计" class="headerlink" title="界面设计"></a>界面设计</h2><h3 id="主界面"><a href="#主界面" class="headerlink" title="主界面"></a>主界面</h3><p>主界面设计简洁明了，便于操作。测试者可以通过串口选择不同的串口编号，不同的USB转串口线在PC上显示的串口编号有所差异，所以要根据实际需要选择。采样数据以及采样频率在编辑框中实时显示，并能够在绘图区动态绘制采样数据形成的曲线。</p>
-<p><img src="/2018/04/04/简易语音识别/main_window.jpg" alt="main_window"></p>
-<h3 id="测试模式下子窗口"><a href="#测试模式下子窗口" class="headerlink" title="测试模式下子窗口"></a>测试模式下子窗口</h3><p><img src="/2018/04/04/简易语音识别/test_mode_sub_window.jpg" alt="test_mode_sub_window"></p>
-<h3 id="主窗口绘制动态曲线"><a href="#主窗口绘制动态曲线" class="headerlink" title="主窗口绘制动态曲线"></a>主窗口绘制动态曲线</h3><p><img src="/2018/04/04/简易语音识别/main_window_draw_curves.jpg" alt="main_window_draw_curves"></p>
+<p><img src="简易语音识别/main_window.jpg" alt="main_window"></p>
+<h3 id="测试模式下子窗口"><a href="#测试模式下子窗口" class="headerlink" title="测试模式下子窗口"></a>测试模式下子窗口</h3><p><img src="简易语音识别/test_mode_sub_window.jpg" alt="test_mode_sub_window"></p>
+<h3 id="主窗口绘制动态曲线"><a href="#主窗口绘制动态曲线" class="headerlink" title="主窗口绘制动态曲线"></a>主窗口绘制动态曲线</h3><p><img src="简易语音识别/main_window_draw_curves.jpg" alt="main_window_draw_curves"></p>
 <h2 id="数据处理结果"><a href="#数据处理结果" class="headerlink" title="数据处理结果"></a>数据处理结果</h2><p>在测试模式下采集完数据后，调用matlab函数对数据进行处理，结果如下所示，可以看出noise在频域上呈现均匀分布，而四个signal数据显示出语音在某段频率区间较强，而不同的目标声音之间也有差异。故可以利用这一特点区分不同的语音。</p>
-<p><img src="/2018/04/04/简易语音识别/data_processing_result.jpg" alt="data_processing_result"></p>
+<p><img src="简易语音识别/data_processing_result.jpg" alt="data_processing_result"></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="单片机程序部分"><a href="#单片机程序部分" class="headerlink" title="单片机程序部分"></a>单片机程序部分</h3><p>在这一部分主要考虑的问题是单片机如何采集环境数据并发送出去。由于设备有限，我们采用STC89C52单片机，以及ADC0809搭建语音采集的部分。但是由于ADC0809本身没有内部时钟，需要外部输入一定频率的脉冲作为时钟信号。考虑到设计基于555芯片的时钟电路会增加电路设计的难度，也会提高电路的复杂程度，故直接采用单片机自带时钟作为触发。而另外的，由于进行串口通信时所采用的波特率由单片机的定时器1模式所决定，也就是需要消耗另外一个定时器用于确定通信波特率。但由于单片机本身仅有两个定时器，这便导致了采样频率不能由我们确定，而是由定时器1同时决定。故我们只能通过MFC上位机计算单片机的采样率。</p>
 <p>另外存在的问题是，由于语音采集模块本身固有的缺陷，导则了我们不能采集到负电位的数据，而且采集模块电容的存在导致放电时间延长，也就是采集到的数据不能很好的反映实际的语音信号，会出现很长的电压衰减过程。在这个方面上来说会对数据的分析造成很大的影响。</p>
 <h3 id="MFC程序设计部分"><a href="#MFC程序设计部分" class="headerlink" title="MFC程序设计部分"></a>MFC程序设计部分</h3><p>MFC程序使用Microsoft控件工具箱中的MSComm控件进行数据获取。MSComm控件在参数设定正确的情况下可以通过PC的串口接收来自其他设备的数据信息。当外界发送数据到接收缓冲区时，MSComm会受到触发，进入OnMSComm的处理函数中进行数据处理，但是在处理完数据之后必须要把接收区清空以免对接下来的数据造成影响。</p>
@@ -427,7 +427,7 @@
 <p>关于MSComm控件的调用需要注意的是，在visual studio软件平台中并没有这个控件，故需要人工导入。导入的流程如下：打开visualstudio 2010b-&gt;Tools-&gt;Choose Toolbox Items-&gt;COM Components-&gt;选择 Microsoft Communications Control, version 6.0即可以将MSComm控件加入到控件工具箱中使用。然后利用Class Warze创建一个MSComm类。理论上则可以使用该控件进行串口通信了，但是实际上创建的MSComm类中的cpp文件是空的，很多函数都缺失了，故仍需要从网上下载相关的cpp文件。</p>
 <h2 id="MFC与MATLAB混合编程"><a href="#MFC与MATLAB混合编程" class="headerlink" title="MFC与MATLAB混合编程"></a>MFC与MATLAB混合编程</h2><h3 id="基于MATLAB-engine的混合编程"><a href="#基于MATLAB-engine的混合编程" class="headerlink" title="基于MATLAB engine的混合编程"></a>基于MATLAB engine的混合编程</h3><p>使用matlab混合编程时，由于是使用engine调用函数在matlab java虚拟机的环境下编程，理论上可以实现matlab所有的功能。但由于没有完全脱离matlab平台，故在运行方面仍是比较麻烦，需要的内存也比较大。</p>
 <p>Visual studio 在使用其他软件的函数时通常都要进行相关的环境设置。在使用MATLAB engine进行混合编程时，需要将matlab需要的头文件以及库文件等添加到visual studio的搜寻路径中。通常设置如下：在Class View 的界面下对建立的工程点击右键，选择properties，出现如下界面：</p>
-<p><img src="/2018/04/04/简易语音识别/vs_setting.jpg" alt="vs_setting"></p>
+<p><img src="简易语音识别/vs_setting.jpg" alt="vs_setting"></p>
 <p>在VC++ Directies中添加library以及include的搜寻路径，在linker中添加所需要的lib文件名称。这样便可解决调用matlab engine过程中出现的大部分“不能识别符号”的错误了。</p>
 <p>但仍需要注意的是，在安装的matlab\extern\include或者matlab\extern\lib文件夹中并没有所有的需要的文件，大部分的lib,dll文件默认保存在matlab\bin的目录下，故需要把文件拷贝到include目录下，才能正常使用。</p>
 <p>在解决完这一切之后，会出现的问题是前文提到的版本兼容问题。由于一开始安装的matlab是64位的，故只能是在visualstudio的x64编译平台下使用，在win32下使用常会出现严重的“断言错误”，导致程序不能正常运行。故在查阅了大量网络资料发现这个问题之后，把原来win32的平台改成x64的平台，从而可以正常使用64位的matlab。但在接下来使用MSComm的时候不得已又因为兼容问题把x64改回win32，并且将matlab重新安装成32位。故实现了同时使用MSComm控件和matlab engine.</p>
@@ -740,6 +740,8 @@
   
 
 
+  
+
 
 
 
@@ -778,6 +780,11 @@
   
   
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
   
 
 
@@ -859,7 +866,7 @@
         notify: false,
         appId: 'fLC2xKQy01MKAEvUniqjfKLd-gzGzoHsz',
         appKey: 'B2XgsMGRFngBgt8GCVjVkPAQ',
-        placeholder: '欢迎留言~',
+        placeholder: '欢迎留言~\(> v <)/~',
         avatar:'mm',
         guest_info:guest,
         pageSize:'10' || 10,
@@ -986,6 +993,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

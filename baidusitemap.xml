@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/pytorch-autogradient/</loc>
+    <lastmod>2018-04-05T01:57:33.803Z</lastmod>
+    <data>
+        <display>
+        <title>Automatic Differentiation of PyTorch</title>
+        <pubTime>2018-04-04T08:59:47.000Z</pubTime>
+        
+        <tag>pytorch</tag>
+         
+        <tag>gradient</tag>
+         
+        <tag>python</tag>
+         
+         
+           
+             
+              <breadCrumb title="pytorch" url="https://iceory.github.io/categories/pytorch/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/binary-weight-networks/</loc>
+    <lastmod>2018-04-04T09:44:08.676Z</lastmod>
+    <data>
+        <display>
+        <title>BWN (Binary Weight Networks) and XNOR-Net</title>
+        <pubTime>2018-04-04T07:09:44.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/gitbook/</loc>
+    <lastmod>2018-04-04T09:42:02.572Z</lastmod>
+    <data>
+        <display>
+        <title>gitbook 安装及使用（windows）</title>
+        <pubTime>2018-04-04T08:54:44.000Z</pubTime>
+        
+        <tag>gitbook</tag>
+         
+         
+           
+             
+              <breadCrumb title="tools" url="https://iceory.github.io/categories/tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/manual-vs-auto-gradient/</loc>
+    <lastmod>2018-04-04T09:40:22.404Z</lastmod>
+    <data>
+        <display>
+        <title>Manual Gradient V.S. Auto Gradient (PyTorch)</title>
+        <pubTime>2018-04-04T08:56:09.000Z</pubTime>
+        
+        <tag>pytorch</tag>
+         
+        <tag>gradient</tag>
+         
+        <tag>python</tag>
+         
+         
+           
+             
+              <breadCrumb title="pytorch" url="https://iceory.github.io/categories/pytorch/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/usage-of-markdown/</loc>
+    <lastmod>2018-04-04T09:32:28.538Z</lastmod>
+    <data>
+        <display>
+        <title>markdown 使用教程</title>
+        <pubTime>2018-04-04T08:57:08.000Z</pubTime>
+        
+        <tag>markdown</tag>
+         
+         
+           
+             
+              <breadCrumb title="tools" url="https://iceory.github.io/categories/tools/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/ppt-draw/</loc>
+    <lastmod>2018-04-04T09:32:04.905Z</lastmod>
+    <data>
+        <display>
+        <title>ppt 绘图</title>
+        <pubTime>2018-04-04T08:58:09.000Z</pubTime>
+        
+        <tag>ppt</tag>
+         
+        <tag>figures</tag>
+         
+         
+           
+             
+              <breadCrumb title="绘图笔记" url="https://iceory.github.io/categories/%E7%BB%98%E5%9B%BE%E7%AC%94%E8%AE%B0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/trained-ternary-quantization/</loc>
+    <lastmod>2018-04-04T09:28:20.539Z</lastmod>
+    <data>
+        <display>
+        <title>TTQ (Trained Ternary Quantization)</title>
+        <pubTime>2018-04-04T08:04:44.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/pyplot/</loc>
+    <lastmod>2018-04-04T09:01:34.852Z</lastmod>
+    <data>
+        <display>
+        <title>pyplot</title>
+        <pubTime>2018-04-04T08:58:54.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>pyplot</tag>
+         
+         
+           
+             
+              <breadCrumb title="绘图笔记" url="https://iceory.github.io/categories/%E7%BB%98%E5%9B%BE%E7%AC%94%E8%AE%B0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/%E7%AE%80%E6%98%93%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/</loc>
+    <lastmod>2018-04-04T08:48:15.843Z</lastmod>
+    <data>
+        <display>
+        <title>基于MFC与MATLAB混合编程的语音识别系统设计</title>
+        <pubTime>2018-04-04T08:34:34.000Z</pubTime>
+        
+        <tag>mfc</tag>
+         
+        <tag>matlab</tag>
+         
+        <tag>speech recognition</tag>
+         
+        <tag>mcu</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%93%A6%E5%8A%9B/</loc>
+    <lastmod>2018-04-04T08:47:57.400Z</lastmod>
+    <data>
+        <display>
+        <title>机器人瓦力</title>
+        <pubTime>2018-04-04T08:34:24.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>arduino</tag>
+         
+        <tag>robot</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/%E6%8F%90%E4%BA%A4%E6%96%87%E4%BB%B6%E5%91%BD%E5%90%8D/</loc>
+    <lastmod>2018-04-04T08:47:44.336Z</lastmod>
+    <data>
+        <display>
+        <title>提交文件命名</title>
+        <pubTime>2018-04-04T07:31:59.000Z</pubTime>
+        
+        <tag>sail</tag>
+         
+         
+           
+             
+              <breadCrumb title="notes" url="https://iceory.github.io/categories/notes/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/vb-%E6%9D%8E%E8%90%A8%E5%A6%82%E5%9B%BE%E5%BD%A2/</loc>
+    <lastmod>2018-04-04T08:47:36.986Z</lastmod>
+    <data>
+        <display>
+        <title>vb 李萨如图形</title>
+        <pubTime>2018-04-04T08:34:12.000Z</pubTime>
+        
+        <tag>vb</tag>
+         
+        <tag>Lissajous figures</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/vb-%E4%BA%94%E5%AD%90%E6%A3%8B/</loc>
+    <lastmod>2018-04-04T08:47:26.405Z</lastmod>
+    <data>
+        <display>
+        <title>vb 五子棋</title>
+        <pubTime>2018-04-04T08:33:52.000Z</pubTime>
+        
+        <tag>gobang</tag>
+         
+        <tag>vb</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/vb-%E4%BA%8C%E6%AC%A1%E6%9B%B2%E7%BA%BF/</loc>
+    <lastmod>2018-04-04T08:47:15.105Z</lastmod>
+    <data>
+        <display>
+        <title>vb 二次曲线</title>
+        <pubTime>2018-04-04T08:23:05.000Z</pubTime>
+        
+        <tag>vb</tag>
+         
+        <tag>curves</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/ternary-weight-networks/</loc>
+    <lastmod>2018-04-04T08:46:49.635Z</lastmod>
+    <data>
+        <display>
+        <title>TWN (Ternary Weight Networks)</title>
+        <pubTime>2018-04-04T07:57:47.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/mfc-%E9%9F%B3%E4%B9%90%E6%92%AD%E6%94%BE%E5%99%A8/</loc>
+    <lastmod>2018-04-04T08:46:35.919Z</lastmod>
+    <data>
+        <display>
+        <title>mfc 音乐播放器</title>
+        <pubTime>2018-04-04T08:23:21.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>mfc</tag>
+         
+        <tag>music player</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/mfc-%E4%BA%94%E5%AD%90%E6%A3%8B/</loc>
+    <lastmod>2018-04-04T08:46:22.593Z</lastmod>
+    <data>
+        <display>
+        <title>mfc 五子棋</title>
+        <pubTime>2018-04-04T08:24:30.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>mfc</tag>
+         
+        <tag>gobang</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/</loc>
+    <lastmod>2018-04-04T08:46:06.889Z</lastmod>
+    <data>
+        <display>
+        <title>Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference</title>
+        <pubTime>2018-04-04T07:51:30.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/incremental-network-quantization/</loc>
+    <lastmod>2018-04-04T08:45:57.920Z</lastmod>
+    <data>
+        <display>
+        <title>INQ (Incremental Network Quantization)</title>
+        <pubTime>2018-04-04T07:45:05.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/dynamic-network-surgery/</loc>
+    <lastmod>2018-04-04T08:45:46.107Z</lastmod>
+    <data>
+        <display>
+        <title>DNS (Dynamic Network Surgery)</title>
+        <pubTime>2018-04-04T07:38:43.000Z</pubTime>
+        
+        <tag>sparse connections</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/binarized-neural-networks/</loc>
+    <lastmod>2018-04-04T08:45:22.402Z</lastmod>
+    <data>
+        <display>
+        <title>BNN (Binarized Neural Networks)</title>
+        <pubTime>2018-04-04T06:54:08.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/deep-compression/</loc>
+    <lastmod>2018-04-04T08:45:11.643Z</lastmod>
+    <data>
+        <display>
+        <title>Deep Compression</title>
+        <pubTime>2018-04-04T07:32:45.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+        <tag>sparse connections</tag>
+         
+        <tag>huffman coding</tag>
+         
+         
+           
+             
+              <breadCrumb title="network quantization" url="https://iceory.github.io/categories/network-quantization/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/cpld-%E7%94%B5%E6%A2%AF%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2018-04-04T08:44:53.137Z</lastmod>
+    <data>
+        <display>
+        <title>CPLD 五层楼的简易电梯控制系统</title>
+        <pubTime>2018-04-04T08:24:10.000Z</pubTime>
+        
+        <tag>CPLD</tag>
+         
+        <tag>elevator</tag>
+         
+        <tag>control</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/c-%E6%89%AB%E9%9B%B7%E6%B8%B8%E6%88%8F/</loc>
+    <lastmod>2018-04-04T08:44:29.377Z</lastmod>
+    <data>
+        <display>
+        <title>c++ 扫雷游戏</title>
+        <pubTime>2018-04-04T08:22:50.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>minesweeping</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/c-table-v3/</loc>
+    <lastmod>2018-04-04T08:44:15.240Z</lastmod>
+    <data>
+        <display>
+        <title>Multi-Function Table Upgrade Again (v3)</title>
+        <pubTime>2018-04-04T08:14:07.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>table</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/c-table-v2/</loc>
+    <lastmod>2018-04-04T08:44:11.296Z</lastmod>
+    <data>
+        <display>
+        <title>Multi-Function Table Upgrade (v2)</title>
+        <pubTime>2018-04-04T08:14:04.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>table</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/c-table-v1/</loc>
+    <lastmod>2018-04-04T08:44:06.892Z</lastmod>
+    <data>
+        <display>
+        <title>Multi-Function Table Diamond (v1)</title>
+        <pubTime>2018-04-04T08:13:57.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>table</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/c-table-v0/</loc>
+    <lastmod>2018-04-04T08:43:55.332Z</lastmod>
+    <data>
+        <display>
+        <title>Multi-Function Table (v0)</title>
+        <pubTime>2018-04-04T08:13:02.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>table</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/c-helloworld-game/</loc>
+    <lastmod>2018-04-04T08:43:41.810Z</lastmod>
+    <data>
+        <display>
+        <title>c++ Hello World Game</title>
+        <pubTime>2018-04-04T08:23:42.000Z</pubTime>
+        
+        <tag>c++</tag>
+         
+        <tag>game</tag>
+         
+         
+           
+             
+              <breadCrumb title="my works" url="https://iceory.github.io/categories/my-works/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/04/20171007/</loc>
+    <lastmod>2018-04-04T08:43:04.416Z</lastmod>
+    <data>
+        <display>
+        <title>写于 2017年10月7日</title>
+        <pubTime>2018-04-04T06:51:26.000Z</pubTime>
+        
+        <tag>thinking</tag>
+         
+         
+           
+             
+              <breadCrumb title="diary" url="https://iceory.github.io/categories/diary/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+    
+</urlset>
