@@ -91,13 +91,13 @@
 <meta property="og:site_name" content="iceory&#39;s blog">
 <meta property="og:description" content="As most of the existing methods suffer from high decreasing on model performance and need many training epochs, the authors provided a lossless quantization method to overcome these problems. The pro">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/incremental-network-quantization/incremental-network-quantization/INQ%20overview.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/incremental-network-quantization/incremental-network-quantization/INQ%20strategy.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/incremental-network-quantization/INQ%20overview.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/incremental-network-quantization/INQ%20strategy.png">
 <meta property="og:updated_time" content="2018-04-04T08:45:57.920Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="INQ (Incremental Network Quantization)">
 <meta name="twitter:description" content="As most of the existing methods suffer from high decreasing on model performance and need many training epochs, the authors provided a lossless quantization method to overcome these problems. The pro">
-<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/incremental-network-quantization/incremental-network-quantization/INQ%20overview.png">
+<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/incremental-network-quantization/INQ%20overview.png">
 
 
 
@@ -380,7 +380,7 @@
       
 
       
-        <p><img src="incremental-network-quantization/INQ overview.png" alt="INQ overview"></p>
+        <p><img src="/2018/04/04/incremental-network-quantization/INQ overview.png" alt="INQ overview"></p>
 <p>As most of the existing methods suffer from high decreasing on model performance and need many training epochs, the authors provided a lossless quantization method to overcome these problems. The proposed method mainly contains three steps: weight partition, group-wise quantization and re-training. Given a trained model, the first step of INQ is to divide weights of the model into to group, one for quantization and another for re-training. Second, apply weight quantization and convert 32-bits floating point data to low precision data. Third, freeze the quantized weights and retraining the network using SGD, then update remaining weights of the network. Repeating these three steps until all weights are quantized, then we can get a low precision model without significant accuracy loss. Considering binary shift operation is more efficient in hardware, the authors quantize weights of convolutional layers and fully connected layers to the  power of 2.<br><a id="more"></a></p>
 <h3 id="Weight-Quantization-Strategy"><a href="#Weight-Quantization-Strategy" class="headerlink" title="Weight Quantization Strategy"></a>Weight Quantization Strategy</h3><p>Suppose weights of a pre-trained full precision model can be represented by ${ W_l: 1 \le l \le L }$, the quantized weights are represented by $\widehat{W_l}$ , where each item is chosen from $P_l = {\pm2^{n_1}, \cdots, \pm2^{n_2}, 0}$. The quantization method is formulated by<br>$$<br>\widehat{W_l}(i, j) =<br>\begin{cases}<br>\beta sgn(W_l (i, j))&amp;if (\alpha + \beta)/2 \le abs(W_l (i, j)) \lt 3\beta/2 &amp;\\<br>0 &amp; otherwise,<br>\end{cases} \tag{1}<br>$$<br>where $\alpha$ and $\beta$ are two adjacent elements in the sorted $P_l$. Based on Equation (1), $n_1$ and $n_2$ in $P_l$ can be computed by</p>
 <p>$$<br>n_1 = floor(log_2(4s/3)),<br>$$<br>where $s=max(abs(W_l))$;</p>
@@ -397,7 +397,7 @@
 <p>For simplifying the equation, define $s=max(abs(W_l))$, then we have $n_1 = floor(log_2(4s/3))$.</p>
 <h4 id="Proof-2-compute-n-2"><a href="#Proof-2-compute-n-2" class="headerlink" title="Proof 2: compute $n_2$"></a>Proof 2: compute $n_2$</h4><p>As $b$ denotes the expected bit-width, one bit for zero and others for representing the powers of 2, which including $2^{b-1}$ different values. Here we have $(n_1-n_2+1)\cdot2= 2^{b-1}$ according to definition of $P_l$. Thus $n_2$ can be computed by $n_2 = n_1+1-2^{b-1}/2$.</p>
 <h3 id="Weight-Partition-Strategies"><a href="#Weight-Partition-Strategies" class="headerlink" title="Weight Partition Strategies"></a>Weight Partition Strategies</h3><p>In this paper, the authors explored two kinds of weight partition strategies, including random partition and pruning-inspired partition. The second partition strategy considers that weights with larger absolute values are more important than the smaller ones and would have more possibility to be quantized. The experimental results also shows that the pruning-inspired strategy outperforms the first one for about 0.8% with ResNet-18.</p>
-<h3 id="Implementation-in-PyTorch"><a href="#Implementation-in-PyTorch" class="headerlink" title="Implementation in PyTorch"></a>Implementation in PyTorch</h3><p><img src="incremental-network-quantization/INQ strategy.png" alt="INQ strategy"></p>
+<h3 id="Implementation-in-PyTorch"><a href="#Implementation-in-PyTorch" class="headerlink" title="Implementation in PyTorch"></a>Implementation in PyTorch</h3><p><img src="/2018/04/04/incremental-network-quantization/INQ strategy.png" alt="INQ strategy"></p>
 <p><strong>Prepare:</strong> pre-train a full-precision model</p>
 <p><strong>Step1, weight partition: </strong></p>
 <ol>

@@ -91,15 +91,15 @@
 <meta property="og:site_name" content="iceory&#39;s blog">
 <meta property="og:description" content="自动求导概述参考文献： Automatic Differentiation in Machine Learning: a Survey目前用于求导的方法大致可以分为四类：  手动解析并代码实现 数值求导 (numerical differentiation), 使用有限的微分近似 符号求导 (symbolic differentiation), 使用代数表达式进行计算 自动求导 (automati">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/pytorch-autogradient/AD_01.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/pytorch-autogradient/AD_02.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/pytorch-autogradient/AD_03.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/pytorch-autogradient/dynamic_graph.gif">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/AD_01.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/AD_02.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/AD_03.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/dynamic_graph.gif">
 <meta property="og:updated_time" content="2018-04-05T01:57:33.803Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Automatic Differentiation of PyTorch">
 <meta name="twitter:description" content="自动求导概述参考文献： Automatic Differentiation in Machine Learning: a Survey目前用于求导的方法大致可以分为四类：  手动解析并代码实现 数值求导 (numerical differentiation), 使用有限的微分近似 符号求导 (symbolic differentiation), 使用代数表达式进行计算 自动求导 (automati">
-<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/pytorch-autogradient/AD_01.png">
+<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/pytorch-autogradient/AD_01.png">
 
 
 
@@ -399,15 +399,15 @@
 <p>从优化的角度，符号求导可以给出问题的内部结构，并用于结果分析。然而，符号求导也容易得到冗长的符号表达式，导致计算困难。</p>
 <h2 id="自动求导"><a href="#自动求导" class="headerlink" title="自动求导"></a>自动求导</h2><p>自动求导依赖于所有的数值计算都是由有限的元操作构成，并且这些元操作的求导是已知的。依据链式法则，可以将所有组成操作的求导过程联系起来，完成整体的求导。自动求导的模式包括：前向模式以及反向模式。</p>
 <p>以 $f(x_1,x_2)={\rm ln}(x_1)+x_1x_2-{\rm sin}(x_2)$ 的求导为例子。其计算过程可以由下图表示。</p>
-<p><img src="pytorch-autogradient/AD_01.png" alt="AD_flow"></p>
+<p><img src="/2018/04/04/pytorch-autogradient/AD_01.png" alt="AD_flow"></p>
 <p>前向模式求解过程：</p>
-<p><img src="pytorch-autogradient/AD_02.png" alt="AD_flow"></p>
+<p><img src="/2018/04/04/pytorch-autogradient/AD_02.png" alt="AD_flow"></p>
 <p>反向模式求解过程：</p>
-<p><img src="pytorch-autogradient/AD_03.png" alt="AD_flow"></p>
+<p><img src="/2018/04/04/pytorch-autogradient/AD_03.png" alt="AD_flow"></p>
 <h2 id="PyTorch-自动求导"><a href="#PyTorch-自动求导" class="headerlink" title="PyTorch 自动求导"></a>PyTorch 自动求导</h2><p>在PyTorch中的自动求导是tape-based autograd，换句话说是基于类似反向模式的自动求导。通过动态的构建运算图，然后反向传播对各个成分进行求导。在PyTorch中，基本的元操作的求导过程已经写好在程序中，如：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Sinh</span><span class="params">(Function)</span>:</span></span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(ctx, i)</span>:</span></span><br><span class="line">        ctx.save_for_backward(i)</span><br><span class="line">        <span class="keyword">return</span> i.sinh()</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span><span class="params">(ctx, grad_output)</span>:</span></span><br><span class="line">        i, = ctx.saved_variables</span><br><span class="line">        <span class="keyword">return</span> grad_output * i.cosh()</span><br></pre></td></tr></table></figure></p>
 <p>其中Function是一个重要的类，所有元操作或者需要自定义求导过程的操作都从Function类继承，可以记录操作的轨迹并用于自动求导的过程。</p>
 <p>PyTorch动态图构建过程如下图所示：</p>
-<p><img src="pytorch-autogradient/dynamic_graph.gif" alt="Dynamic Graph"></p>
+<p><img src="/2018/04/04/pytorch-autogradient/dynamic_graph.gif" alt="Dynamic Graph"></p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h2><p>[1] <a href="https://justindomke.wordpress.com/2009/03/24/a-simple-explanation-of-reverse-mode-automatic-differentiation/" target="_blank" rel="noopener">https://justindomke.wordpress.com/2009/03/24/a-simple-explanation-of-reverse-mode-automatic-differentiation/</a></p>
 <p>[2] <a href="https://justindomke.wordpress.com/2009/02/17/automatic-differentiation-the-most-criminally-underused-tool-in-the-potential-machine-learning-toolbox/" target="_blank" rel="noopener">https://justindomke.wordpress.com/2009/02/17/automatic-differentiation-the-most-criminally-underused-tool-in-the-potential-machine-learning-toolbox/</a></p>
 <p>[3] python autograd tool: <a href="https://github.com/HIPS/autograd" target="_blank" rel="noopener">https://github.com/HIPS/autograd</a></p>
