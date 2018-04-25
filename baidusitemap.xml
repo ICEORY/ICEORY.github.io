@@ -4,14 +4,120 @@
 
     
   <url>
+    <loc>https://iceory.github.io/2018/04/25/thinet-slides/</loc>
+    <lastmod>2018-04-25T03:22:23.492Z</lastmod>
+    <data>
+        <display>
+        <title>thinet_slides</title>
+        <pubTime>2018-04-25T03:21:31.000Z</pubTime>
+        
+        <tag>channel pruning</tag>
+         
+         
+           
+             
+              <breadCrumb title="slides" url="https://iceory.github.io/categories/slides/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/25/INQ-slides/</loc>
+    <lastmod>2018-04-25T03:21:13.558Z</lastmod>
+    <data>
+        <display>
+        <title>INQ_slides</title>
+        <pubTime>2018-04-25T03:20:05.000Z</pubTime>
+        
+        <tag>network quantization</tag>
+         
+         
+           
+             
+              <breadCrumb title="slides" url="https://iceory.github.io/categories/slides/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/25/fpga-based-cnn/</loc>
+    <lastmod>2018-04-25T03:19:39.373Z</lastmod>
+    <data>
+        <display>
+        <title>fpga_based_cnn</title>
+        <pubTime>2018-04-25T03:18:07.000Z</pubTime>
+        
+        <tag>FPGA</tag>
+         
+        <tag>CNN</tag>
+         
+         
+           
+             
+              <breadCrumb title="slides" url="https://iceory.github.io/categories/slides/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/25/pytorch-tutorials/</loc>
+    <lastmod>2018-04-25T03:17:12.779Z</lastmod>
+    <data>
+        <display>
+        <title>pytorch_tutorials</title>
+        <pubTime>2018-04-25T03:15:57.000Z</pubTime>
+        
+        <tag>PyTorch</tag>
+         
+         
+           
+             
+              <breadCrumb title="slides" url="https://iceory.github.io/categories/slides/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://iceory.github.io/2018/04/25/caffe-tutorials/</loc>
+    <lastmod>2018-04-25T03:15:32.267Z</lastmod>
+    <data>
+        <display>
+        <title>caffe_tutorials</title>
+        <pubTime>2018-04-25T03:13:50.000Z</pubTime>
+        
+        <tag>caffe</tag>
+         
+        <tag>tutorial</tag>
+         
+         
+           
+             
+              <breadCrumb title="slides" url="https://iceory.github.io/categories/slides/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://iceory.github.io/2018/04/25/caffeine-slides/</loc>
-    <lastmod>2018-04-25T03:11:24.225Z</lastmod>
+    <lastmod>2018-04-25T03:14:38.935Z</lastmod>
     <data>
         <display>
         <title>caffeine_slides</title>
         <pubTime>2018-04-25T02:54:50.000Z</pubTime>
         
         <tag>caffeine</tag>
+         
+        <tag>caffe</tag>
          
          
            
