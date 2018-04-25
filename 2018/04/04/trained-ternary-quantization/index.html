@@ -91,12 +91,12 @@
 <meta property="og:site_name" content="iceory&#39;s blog">
 <meta property="og:description" content="The ternary quantization methods proposed in this paper based on threshold and quantized weights to 0 and {-1, +1} with two different scaling factor. The authors also suggested the rule of scaled grad">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/trained-ternary-quantization/Overview%20of%20TTQ.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/trained-ternary-quantization/trained-ternary-quantization/Overview%20of%20TTQ.png">
 <meta property="og:updated_time" content="2018-04-04T09:28:20.539Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TTQ (Trained Ternary Quantization)">
 <meta name="twitter:description" content="The ternary quantization methods proposed in this paper based on threshold and quantized weights to 0 and {-1, +1} with two different scaling factor. The authors also suggested the rule of scaled grad">
-<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/trained-ternary-quantization/Overview%20of%20TTQ.png">
+<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/trained-ternary-quantization/trained-ternary-quantization/Overview%20of%20TTQ.png">
 
 
 
@@ -380,7 +380,7 @@
 
       
         <p>The ternary quantization methods proposed in this paper based on threshold and quantized weights to 0 and {-1, +1} with two different scaling factor. The authors also suggested the rule of scaled gradient to update weight in different group. Quantized ternary weight $w_l^i$ of the network can be calculated by:<br>$$<br>w_l^t =<br>\begin{cases}<br>W_l^p&amp;:&amp; \tilde{w_l} \gt \triangle_l \\<br>0&amp;:&amp; |\tilde{w_l}| \le \triangle_l \\<br>-W_l^n&amp;:&amp; \tilde{w_l} \lt -\triangle_l<br>\end{cases} \tag{1}<br>$$<br><a id="more"></a><br>Different from previous work where weights are calculated from 32-bit weights, the scaling coefficients $W_l^p, W_l^n$ are two independent parameters and are trained with gradient descent:<br>$$<br>\frac{\partial L}{\partial W_l^p} = \sum_{i\in I_l^p}\frac{\partial L}{\partial w_l^t(i)}, \\<br>\frac{\partial L}{\partial W_l^n} = \sum_{i\in I_l^n}\frac{\partial L}{\partial w_l^t(i)}, \tag{2}<br>$$<br>Here $I_l^p={i|\tilde{w_l}(i) \gt \triangle_l}$ and $I_l^n={i|\tilde{w_l}(i) \lt -\triangle_l}$. The proposed scaled gradients for 32-bit are weights computed by:<br>$$<br>\frac{\partial L}{\partial\tilde{w_l}} =<br>\begin{cases}<br>W_l^p\times\frac{\partial L}{\partial w_l^t}&amp;:&amp;\tilde{w} \gt \triangle_l \\<br>1\times\frac{\partial L}{\partial w_l^t}&amp;:&amp;|\tilde{w}| \le \triangle_l \\<br>W_l^n\times\frac{\partial L}{\partial w_l^t}&amp;:&amp;\tilde{w} \lt -\triangle_l<br>\end{cases} \tag{3}<br>$$<br>Different from TWN, the authors explored two strategies to decide the values of thresholds: (1) $\triangle_l=t\times\max(|\tilde{w}|)$, $t$ is set to 0.05 on CIFAR-10 and ImageNet; (2) $\triangle_l=r$, where $r$ is a hyper-parameter and adjusted with various sparsities. For exploring the trade-off between sparsity and accuracy, the sparsity of weights are growing from 0 to 0.5 and the best result occurs with  sparsity between 0.3 and 0.5.<br><!-- more --></p>
-<h2 id="Training-Methods"><a href="#Training-Methods" class="headerlink" title="Training Methods"></a>Training Methods</h2><p><img src="/2018/04/04/trained-ternary-quantization/Overview of TTQ.png" alt="Overview of TTQ"></p>
+<h2 id="Training-Methods"><a href="#Training-Methods" class="headerlink" title="Training Methods"></a>Training Methods</h2><p><img src="trained-ternary-quantization/Overview of TTQ.png" alt="Overview of TTQ"></p>
 <p><strong>First:</strong> normalize full-precision weights to range $[-1, +1]$ by dividing each weight by the maximum weight</p>
 <p><strong>Second:</strong> quantize weights to ${-W_l^n, 0, W_l^p}$ with threshold factor $t$</p>
 <p><strong>Third:</strong> compute the scaled gradients and update the scaling coefficients with back propagation</p>
@@ -627,7 +627,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -638,7 +638,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -649,7 +649,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

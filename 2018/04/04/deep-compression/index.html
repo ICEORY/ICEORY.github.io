@@ -91,12 +91,12 @@
 <meta property="og:site_name" content="iceory&#39;s blog">
 <meta property="og:description" content="In this paper the authors introduces “deep compression” to compress model size of deep convolutional neural networks. The proposed method consists of three stage: pruning, trained quantization and Hu">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/deep-compression/Pipeline%20of%20Deep%20Compression.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/deep-compression/deep-compression/Pipeline%20of%20Deep%20Compression.png">
 <meta property="og:updated_time" content="2018-04-04T08:45:11.643Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Deep Compression">
 <meta name="twitter:description" content="In this paper the authors introduces “deep compression” to compress model size of deep convolutional neural networks. The proposed method consists of three stage: pruning, trained quantization and Hu">
-<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/deep-compression/Pipeline%20of%20Deep%20Compression.png">
+<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/deep-compression/deep-compression/Pipeline%20of%20Deep%20Compression.png">
 
 
 
@@ -379,7 +379,7 @@
       
 
       
-        <p><img src="/2018/04/04/deep-compression/Pipeline of Deep Compression.png" alt="Pipeline of Deep Compression"></p>
+        <p><img src="deep-compression/Pipeline of Deep Compression.png" alt="Pipeline of Deep Compression"></p>
 <p>In this paper the authors introduces “deep compression” to compress model size of deep convolutional neural networks. The proposed method consists of three stage: pruning, trained quantization and <a href="https://en.wikipedia.org/wiki/Huffman_coding" target="_blank" rel="noopener">Huffman coding</a>. The authors first prunes weights by learning the important connections. Second, quantize weights to enforce weight sharing. Third, apply Huffman coding to reduce storage further. </p>
 <h2 id="Proposed-Methods"><a href="#Proposed-Methods" class="headerlink" title="Proposed Methods"></a>Proposed Methods</h2><p><a href="http://papers.nips.cc/paper/5784-learning-both-weights-and-connections-for-efficient-neural-network.pdf" target="_blank" rel="noopener">Network Pruning</a>: First, learn connectivity by normal network training. Second, remove weights below threshold. Third,  retrain the network to learn the final weights for remaining sparse connections. After pruning, the sparse structure is stored using compress sparse row (CSR) or compress sparse column (CSC).<br><a id="more"></a><br>Trained Quantization: use $k$-clusters with $b$-bits to represent $n$-connections of the network. The compression rate can be computed by:<br>$$<br>r=\frac{nb}{nlog_2(k)+kb} \tag{1}<br>$$<br>The authors use k-means algorithm to get $k$-clusters $C={c_1, c_2,\dots,c_k}$ to represent  $n$ original weights $W={w_1, w_2, \dots,w_n}$, and the optimized objective function is:<br>$$<br>\arg\min_C\sum_{i=1}^{k}\sum_{w\in c_i} |w-c_i|^2 \tag{2}<br>$$<br>As the initialization of k-means algorithm is quite important, the authors explored three initial methods including forgy (random), density-based, linear. The authors suggested that using linear initialization can get better result as it has better representation to the few large weights which are important to the networks.</p>
 <p>Once the centroids of weights are decided by k-means clustering, the index of sharing weight table is stored for each connections and used when conducting forward or backward propagation. Gradients for the shared weights are computed by:<br>$$<br>\frac{\partial \mathcal{L}}{\partial C_k} = \sum_{i,j}\frac{\partial \mathcal{L}}{\partial W_{i,j}}\frac{\partial W_{i,j}}{\partial C_k} = \sum_{i,j}\frac{\partial{\mathcal L}}{\partial W_{i,j}}\mathbb{1}(I_{i,j}=k), \tag{3}<br>$$<br>where $\mathcal{L}$ indicates loss, $W_{i,j}$ indicates weight in the $i$-th column and $j$-th row, $C_k$ indicates the $k$-th centroid of the layer and $\mathbb{1}(\cdot)$ is an indicator function.</p>
@@ -601,7 +601,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -612,7 +612,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -623,7 +623,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

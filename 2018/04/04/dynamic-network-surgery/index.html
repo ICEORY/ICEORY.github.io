@@ -91,12 +91,12 @@
 <meta property="og:site_name" content="iceory&#39;s blog">
 <meta property="og:description" content="In this paper, the authors proposed dynamic network surgery to prune unimportant connections of the network. Different from previous methods, the proposed method contains two operations: pruning and">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/dynamic-network-surgery/Overview%20of%20DNS.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/dynamic-network-surgery/dynamic-network-surgery/Overview%20of%20DNS.png">
 <meta property="og:updated_time" content="2018-04-04T08:45:46.107Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="DNS (Dynamic Network Surgery)">
 <meta name="twitter:description" content="In this paper, the authors proposed dynamic network surgery to prune unimportant connections of the network. Different from previous methods, the proposed method contains two operations: pruning and">
-<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/dynamic-network-surgery/Overview%20of%20DNS.png">
+<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/dynamic-network-surgery/dynamic-network-surgery/Overview%20of%20DNS.png">
 
 
 
@@ -379,7 +379,7 @@
       
 
       
-        <p><img src="/2018/04/04/dynamic-network-surgery/Overview of DNS.png" alt="Overview of DNS"></p>
+        <p><img src="dynamic-network-surgery/Overview of DNS.png" alt="Overview of DNS"></p>
 <p>In this paper, the authors proposed dynamic network surgery to prune unimportant connections of the network. Different from previous methods, the proposed method contains two operations: <strong>pruning</strong> and <strong>splicing</strong>. Considering the complexity of deep neural networks, it is difficult to decide which connection is important and which one should be pruned. Thus the splicing operation is to recover the pruned weights that are found to be important during training phase. In contrary, weights are pruned with no chance to come back in previous methods, and that may lead to severe loss of accuracy.<br><a id="more"></a></p>
 <h2 id="Pruning-and-Splicing"><a href="#Pruning-and-Splicing" class="headerlink" title="Pruning and Splicing"></a>Pruning and Splicing</h2><p>Suppose $W_k$ represents weights of a DNN model, and mask $T_k(i,j)\in {0,1}$ denotes the states of connections of network. The optimize object can be formulated as follows:<br>$$<br>\min_{W_k, T_k} L(W_k\odot T_k)~s.t. T_k^{(i, j)}=h_k(W_k^{(i, j)}), \forall (i,j)\in \mathcal{I}, \tag{1}<br>$$<br>where $L(\cdot)$ denotes the loss function, $\odot$ indicates the <a href="https://en.wikipedia.org/wiki/Hadamard_product_(matrices" target="_blank" rel="noopener">Hadamard product operator</a>), $\mathcal{I}$ represents every entry of weight matrixes and $h_k(W_k^{(i,j)})$ evaluates the importance of connections in the network. The definition of $h_k$ is shown as follows:<br>$$<br>h_k(W_k^{(i,j)}) =<br>\begin{cases}<br>0 &amp; if~a_k\gt|W_k^{(i,j)}| \<br>T_k^{(i,j)}  &amp; if~a_k\le |W_k^{(i,j)}| \lt b_k \<br>1 &amp; if~b_k\le |W_k^{(i,j)}|<br>\end{cases}\tag{2}<br>$$<br>$a_k$ and $b_k$ in Equation (2) are two thresholds for improving the robustness of the proposed method. Note that if $|W_k^{(i,j)}|\in [a_k, b_k]$, the state of $T_k^{(i,j)}$ would not be changed. This Equation is applied to the network to re-evaluate all the weights before training phase. Thus the pruned weights can be spliced if they are evaluated as important connections.</p>
 <p>Further more, the thresholds $a_k$ and $b_k$ are computed by the following equations according to <a href="https://github.com/yiwenguo/Dynamic-Network-Surgery" target="_blank" rel="noopener">source code</a> on GitHub:<br>$$<br>a_k = 0.9*(mean(W_k)+cRate*std(W_k)),\<br>b_k = 1.1*(mean(W_k)+cRate*std(W_k)), \tag{3}<br>$$<br>where $cRate$ is the factor deciding the compressing rate of the model. Larger $cRate$ leads to higher compression rate with more loss of accuracy.</p>
@@ -661,7 +661,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -672,7 +672,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -683,7 +683,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

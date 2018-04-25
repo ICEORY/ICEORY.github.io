@@ -91,19 +91,19 @@
 <meta property="og:site_name" content="iceory&#39;s blog">
 <meta property="og:description" content="Paper: https://arxiv.org/abs/1712.05877 Code: refer to TensorFlowLite.quantize Training with simulated quantizationPoint-wise quantization:$$clamp(r;a,b) := min(max(r, a), b)$$ $$s(a,b,n) := \frac{b-a">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/simple_origin.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/simple_quantize.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/bypass_origin.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/bypass_quantize.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/conv_bn_training.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/conv_bn_inference.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold.png">
-<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold_quantize.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/simple_origin.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/simple_quantize.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/bypass_origin.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/bypass_quantize.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/conv_bn_training.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/conv_bn_inference.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/conv_bn_training_fold.png">
+<meta property="og:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/conv_bn_training_fold_quantize.png">
 <meta property="og:updated_time" content="2018-04-04T08:46:06.889Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference">
 <meta name="twitter:description" content="Paper: https://arxiv.org/abs/1712.05877 Code: refer to TensorFlowLite.quantize Training with simulated quantizationPoint-wise quantization:$$clamp(r;a,b) := min(max(r, a), b)$$ $$s(a,b,n) := \frac{b-a">
-<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/simple_origin.png">
+<meta name="twitter:image" content="https://iceory.github.io/2018/04/04/integer-arithmetic-only-inference/integer-arithmetic-only-inference/simple_origin.png">
 
 
 
@@ -437,35 +437,35 @@
 <h3 id="Graph-illustration"><a href="#Graph-illustration" class="headerlink" title="Graph illustration"></a>Graph illustration</h3><h4 id="simple-graph-for-single-layer"><a href="#simple-graph-for-single-layer" class="headerlink" title="simple graph for single layer"></a>simple graph for single layer</h4><ul>
 <li>origin</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/simple_origin.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/simple_origin.png" alt="simple_graph_origin"></p>
 <ul>
 <li>quantized</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/simple_quantize.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/simple_quantize.png" alt="simple_graph_origin"></p>
 <h4 id="layer-with-bypass"><a href="#layer-with-bypass" class="headerlink" title="layer with bypass"></a>layer with bypass</h4><ul>
 <li>origin</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/bypass_origin.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/bypass_origin.png" alt="simple_graph_origin"></p>
 <ul>
 <li>quantized</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/bypass_quantize.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/bypass_quantize.png" alt="simple_graph_origin"></p>
 <h4 id="convolutional-layer-with-batch-normalization"><a href="#convolutional-layer-with-batch-normalization" class="headerlink" title="convolutional layer with batch normalization"></a>convolutional layer with batch normalization</h4><ul>
 <li>training</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_training.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/conv_bn_training.png" alt="simple_graph_origin"></p>
 <ul>
 <li>inference</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_inference.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/conv_bn_inference.png" alt="simple_graph_origin"></p>
 <ul>
 <li>training with fold</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/conv_bn_training_fold.png" alt="simple_graph_origin"></p>
 <ul>
 <li>training with fold quantized</li>
 </ul>
-<p><img src="/2018/04/04/integer-arithmetic-only-inference/conv_bn_training_fold_quantize.png" alt="simple_graph_origin"></p>
+<p><img src="integer-arithmetic-only-inference/conv_bn_training_fold_quantize.png" alt="simple_graph_origin"></p>
 
       
     </div>
@@ -610,7 +610,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -621,7 +621,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -632,7 +632,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
