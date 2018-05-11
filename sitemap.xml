@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://iceory.github.io/about/index.html</loc>
+    
+    <lastmod>2018-05-11T12:13:12.992Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://iceory.github.io/2018/04/25/caffeine-slides/</loc>
     
     <lastmod>2018-04-25T03:32:14.325Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>https://iceory.github.io/2018/04/25/thinet-slides/</loc>
     
     <lastmod>2018-04-25T03:31:54.737Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://iceory.github.io/about/index.html</loc>
-    
-    <lastmod>2018-04-05T05:52:08.476Z</lastmod>
     
   </url>
   
