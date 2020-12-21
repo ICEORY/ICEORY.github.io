@@ -3,6 +3,26 @@
 
 
     
+  <url>
+    <loc>https://iceory.github.io/2018/04/25/thinet-slides/</loc>
+    <lastmod>2020-12-21T09:11:56.223Z</lastmod>
+    <data>
+        <display>
+        <title>thinet_slides</title>
+        <pubTime>2018-04-25T03:21:31.000Z</pubTime>
+        
+        <tag>channel pruning</tag>
+         
+         
+           
+             
+              <breadCrumb title="slides" url="https://iceory.github.io/categories/slides/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
     
   <url>
     <loc>https://iceory.github.io/2018/04/25/caffeine-slides/</loc>
@@ -99,26 +119,6 @@
         <pubTime>2018-04-25T03:20:05.000Z</pubTime>
         
         <tag>network quantization</tag>
-         
-         
-           
-             
-              <breadCrumb title="slides" url="https://iceory.github.io/categories/slides/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://iceory.github.io/2018/04/25/thinet-slides/</loc>
-    <lastmod>2018-04-25T03:31:54.737Z</lastmod>
-    <data>
-        <display>
-        <title>thinet_slides</title>
-        <pubTime>2018-04-25T03:21:31.000Z</pubTime>
-        
-        <tag>channel pruning</tag>
          
          
            
